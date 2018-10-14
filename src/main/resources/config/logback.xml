@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configration>
+	<contextName>logback</contextName>
+	
+    <!--参数-->
+	<property name="FILE_SIZE" value="50MB"/> 
+	<property name="LOG_PATH" value="log"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender"> 
+		<encoder> 
+<!-- 			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>  -->
+			<pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger) - %msg%n</pattern>
+		</encoder> 
+	</appender>
+
+</configration>
