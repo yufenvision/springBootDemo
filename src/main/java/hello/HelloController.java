@@ -25,7 +25,6 @@ public class HelloController {
 			strs.add(String.valueOf((Math.ceil(Math.random()*5))));
 			num--;
 		}
-		
 		return strs;
 	}
 	
