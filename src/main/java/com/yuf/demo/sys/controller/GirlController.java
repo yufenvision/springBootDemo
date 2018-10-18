@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yuf.demo.config.aspect.HttpAspect;
 import com.yuf.demo.sys.entity.Girl;
+import com.yuf.demo.sys.entity.Result;
 import com.yuf.demo.sys.mapper.GirlRepository;
 import com.yuf.demo.sys.service.GirlService;
+import com.yuf.demo.utils.ResultUtil;
 
 /**
  * @author dyf
@@ -48,16 +49,15 @@ public class GirlController {
 	}
 	
 	@PostMapping("/girlAdd")
-	public Girl girlAdd(@Valid Girl girl,BindingResult bindingResult){
+	public Result<Girl> girlAdd(@Valid Girl girl,BindingResult bindingResult){
+		Result<Girl> result = new Result<>();
 		if(bindingResult.hasErrors()){
-			System.out.println(bindingResult.getFieldError().getDefaultMessage());
-			return null;
+			return ResultUtil.error(1,bindingResult.getFieldError().getDefaultMessage());
 		}
 		girl.setName(girl.getName());
 		girl.setAge(girl.getAge());
 		girl.setCupSize(girl.getCupSize());
-		
-		return girlRepository.save(girl);
+		return ResultUtil.success(girlRepository.save(girl));
 	}
 	
 	/**
@@ -98,4 +98,8 @@ public class GirlController {
 		girlService.insertTwo();
 	}
 	
+	@GetMapping("/girlAge/{id}")
+	public void girlAge(@PathVariable("id") Integer id) throws Exception{
+		girlService.getAge(id);
+	}
 }
