@@ -1,4 +1,7 @@
 package com.yuf.demo.sys.exception;
+
+import com.yuf.demo.utils.ExceptionEnum;
+
 /**
 * @author 作者 dyf:
 * @version 创建时间：2018年10月18日 下午10:57:51
@@ -8,9 +11,9 @@ public class GirlException extends RuntimeException{
 	
 	private Integer code;
 	
-	public GirlException(Integer code,String msg){
-		super(msg);
-		this.code = code;
+	public GirlException(ExceptionEnum exceptionEnum){
+		super(exceptionEnum.getMsg());
+		this.code = exceptionEnum.getCode();
 	}
 
 	public Integer getCode() {

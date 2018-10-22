@@ -21,7 +21,7 @@ import com.yuf.demo.sys.entity.Girl;
 import com.yuf.demo.sys.entity.Result;
 import com.yuf.demo.sys.mapper.GirlRepository;
 import com.yuf.demo.sys.service.GirlService;
-import com.yuf.demo.utils.ResultUtil;
+import com.yuf.demo.utils.ResultForm;
 
 /**
  * @author dyf
@@ -49,15 +49,26 @@ public class GirlController {
 	}
 	
 	@PostMapping("/girlAdd")
-	public Result<Girl> girlAdd(@Valid Girl girl,BindingResult bindingResult){
-		Result<Girl> result = new Result<>();
+	public ResultForm<Girl> girlAdd(@Valid Girl girl,BindingResult bindingResult){
+//		Result<Girl> result = new Result<>();
+//		if(bindingResult.hasErrors()){
+//			return ResultUtil.error(1,bindingResult.getFieldError().getDefaultMessage());
+//		}
+//		girl.setName(girl.getName());
+//		girl.setAge(girl.getAge());
+//		girl.setCupSize(girl.getCupSize());
+//		return ResultUtil.success(girlRepository.save(girl));
+		ResultForm<Girl> result = new ResultForm<>();
 		if(bindingResult.hasErrors()){
-			return ResultUtil.error(1,bindingResult.getFieldError().getDefaultMessage());
+			result.setStatus(1);
+			result.setMsg(bindingResult.getFieldError().getDefaultMessage());
+//			result.setStatus(ResultForm.Status.ERROR);
 		}
 		girl.setName(girl.getName());
 		girl.setAge(girl.getAge());
 		girl.setCupSize(girl.getCupSize());
-		return ResultUtil.success(girlRepository.save(girl));
+		girlRepository.save(girl);
+		return result;
 	}
 	
 	/**
