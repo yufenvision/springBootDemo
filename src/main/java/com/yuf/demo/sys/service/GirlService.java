@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yuf.demo.sys.entity.Girl;
 import com.yuf.demo.sys.exception.GirlException;
 import com.yuf.demo.sys.mapper.GirlRepository;
+import com.yuf.demo.utils.ExceptionEnum;
 
 @Service
 public class GirlService {
@@ -37,11 +38,11 @@ public class GirlService {
 		if(age < 10){
 			//返回 code 100
 //			throw new Exception("你还在上小学吧");
-			throw new GirlException(100,"你还在上小学吧");
+			throw new GirlException(ExceptionEnum.PRIMARY_SCHOOL);
 		}else if(age > 10 && age < 16){
 			//返回 code 101
 //			throw new Exception("你可能在上初中");
-			throw new GirlException(101,"你可能在上初中");
+			throw new GirlException(ExceptionEnum.MIDDLE_SCHOOL);
 		}else{
 			//返回 code 99
 			throw new Exception("读书要加钱");
@@ -50,4 +51,13 @@ public class GirlService {
 		//....如果大于16岁，加钱
 	}
 	
+	
+	/**
+	 * 通过Id查询一个女生的信息
+	 * @param id
+	 * @return
+	 */
+	public Optional<Girl> findOne(Integer id){
+		return girlRepository.findById(id);
+	}
 }
