@@ -17,6 +17,11 @@ public class ResultForm<T> {
 	 */
 	private T data;
 	
+	/**
+	 * 作为的是状态码和消息的常量
+	 * @author dyf
+	 * @version 2018年10月25日上午10:04:06
+	 */
 	public enum Status{
 		SUCCESS(200,"成功"),
 		ERROR(9999,"未知错误");

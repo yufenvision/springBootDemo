@@ -45,7 +45,7 @@ public class GirlService {
 			throw new GirlException(ExceptionEnum.MIDDLE_SCHOOL);
 		}else{
 			//返回 code 99
-			throw new Exception("读书要加钱");
+			throw new GirlException(ExceptionEnum.ADD_MONEY);
 		}
 		
 		//....如果大于16岁，加钱
