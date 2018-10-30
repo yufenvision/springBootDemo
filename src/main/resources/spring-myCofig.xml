@@ -12,5 +12,4 @@
         
 	<bean id="myBean" class="com.yuf.demo.myTest.configTest.MyBean"></bean>
 
-	<bean id="myBean1" class="com.yuf.demo.myTest.configTest.MyBean1"></bean>
 </beans>

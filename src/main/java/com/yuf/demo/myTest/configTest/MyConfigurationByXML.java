@@ -7,4 +7,8 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("classpath*:spring-myCofig.xml")
 public class MyConfigurationByXML {
 
+	public MyConfigurationByXML() {
+		System.out.println("我的XML配置初始化。。。。");
+	}
+	
 }

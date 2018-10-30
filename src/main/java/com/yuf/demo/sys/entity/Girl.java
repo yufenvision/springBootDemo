@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
 
+import com.baomidou.mybatisplus.annotations.TableName;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +15,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-@Entity
+@TableName("girl")
 public class Girl {
-	@Id
-	@GeneratedValue
-	private Integer id;
+//	@Id
+//	@GeneratedValue
+	private String id;
 	
 	private String name;
 	

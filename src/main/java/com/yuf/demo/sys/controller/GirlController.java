@@ -1,7 +1,7 @@
 package com.yuf.demo.sys.controller;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yuf.demo.sys.entity.Girl;
-import com.yuf.demo.sys.entity.Result;
-import com.yuf.demo.sys.mapper.GirlRepository;
+import com.yuf.demo.sys.mapper.GirlMapper;
 import com.yuf.demo.sys.service.GirlService;
 import com.yuf.demo.utils.ResultForm;
 
@@ -33,19 +32,19 @@ public class GirlController {
 	private final static Logger logger = LoggerFactory.getLogger(GirlController.class);
 	
 	@Autowired
-	private GirlRepository girlRepository;
+	private GirlMapper girlMapper;
 	
 	@Autowired
 	private GirlService girlService;
 	
 	@GetMapping("/girls")
 	public List<Girl> girls(){
-		return girlRepository.findAll();
+		return girlMapper.selectList(null);
 	}
 	
 	@GetMapping("/girlOne/{id}")
-	public Optional<Girl> girlOne(@PathVariable("id") Integer id){
-		return girlRepository.findById(id);
+	public Girl girlOne(@PathVariable("id") Integer id){
+		return girlMapper.selectById(id);
 	}
 	
 	@PostMapping("/girlAdd")
@@ -57,7 +56,7 @@ public class GirlController {
 //		girl.setName(girl.getName());
 //		girl.setAge(girl.getAge());
 //		girl.setCupSize(girl.getCupSize());
-//		return ResultUtil.success(girlRepository.save(girl));
+//		return ResultUtil.success(girlMapper.save(girl));
 		ResultForm<Girl> result = new ResultForm<>();
 		if(bindingResult.hasErrors()){
 			result.setStatus(1);
@@ -67,7 +66,7 @@ public class GirlController {
 		girl.setName(girl.getName());
 		girl.setAge(girl.getAge());
 		girl.setCupSize(girl.getCupSize());
-		girlRepository.save(girl);
+		girlMapper.insert(girl);
 		return result;
 	}
 	
@@ -80,7 +79,7 @@ public class GirlController {
 	 * @return
 	 */
 	@PutMapping("/girlUpdate/{id}")
-	public Girl girlUpdate(@PathVariable("id") Integer id
+	public Girl girlUpdate(@PathVariable("id") String id
 			,@RequestParam("name") String name
 			,@RequestParam("cupSize") String cupSize
 			,@RequestParam("age") Integer age){
@@ -89,19 +88,21 @@ public class GirlController {
 		girl.setName(name);
 		girl.setAge(age);
 		girl.setCupSize(cupSize);
-		
-		return girlRepository.save(girl);
+		Integer returnId = girlMapper.insert(girl);
+		return girlMapper.selectById(returnId);
 	}
 	
 	
 	@DeleteMapping("/girlDel/{id}")
 	public void girlDel(@PathVariable("id") Integer id){
-		girlRepository.deleteById(id);
+		girlMapper.deleteById(id);
 	}
 	
 	@GetMapping("/girlGetByAge")
-	public List<Girl> girlGetByAge(@RequestParam("age") Integer age){
-		return girlRepository.findByAge(age);
+	public ResultForm<List<Girl>> girlGetByAge(@RequestParam Map params){
+		ResultForm<List<Girl>> result = new ResultForm<>();
+		result.setData(girlMapper.getGirlList(params));
+		return result;
 	}
 	
 	@PostMapping(value="/girls/two")

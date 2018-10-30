@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class MyConfigurationByCode {
 	
 	public MyConfigurationByCode() {
-		System.out.println("我的配置初始化。。。。。。");
+		System.out.println("我的Code配置初始化。。。。。。");
 	}
 
 	@Bean
