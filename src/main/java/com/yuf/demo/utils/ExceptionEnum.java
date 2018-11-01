@@ -4,7 +4,8 @@ public enum ExceptionEnum {
 	SUCCESS(200,"请求成功"),
 	ERROR(999,"未知错误"),
 	PRIMARY_SCHOOL(100,"你还在上小学吧"),
-	MIDDLE_SCHOOL(101,"你可能在上初中");
+	MIDDLE_SCHOOL(101,"你可能在上初中"),
+	ADD_MONEY(666,"读书要加钱");
 	
 	private int code = 200;
 	private String msg = "请求成功";

@@ -1,21 +1,19 @@
 package com.yuf.demo.sys.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yuf.demo.sys.entity.Girl;
 import com.yuf.demo.sys.exception.GirlException;
-import com.yuf.demo.sys.mapper.GirlRepository;
+import com.yuf.demo.sys.mapper.GirlMapper;
 import com.yuf.demo.utils.ExceptionEnum;
 
 @Service
 public class GirlService {
 	
 	@Autowired
-	private GirlRepository girlRepository;
+	private GirlMapper girlMapper;
 	
 	@Transactional
 	public void insertTwo(){
@@ -23,18 +21,18 @@ public class GirlService {
 		girlA.setCupSize("A");
 		girlA.setName("女孩1");
 		girlA.setAge(18);
-		girlRepository.save(girlA);
+		girlMapper.insert(girlA);
 		
 		Girl girlB = new Girl();
 		girlB.setCupSize("BBBB");
 		girlB.setName("女孩2");
 		girlB.setAge(19);
-		girlRepository.save(girlB);
+		girlMapper.insert(girlB);
 	}
 	
 	public void getAge(Integer id) throws Exception{
-		Optional<Girl> girl = girlRepository.findById(id);
-		Integer age = girl.get().getAge();
+		Girl girl = girlMapper.selectById(id);
+		Integer age = girl.getAge();
 		if(age < 10){
 			//返回 code 100
 //			throw new Exception("你还在上小学吧");
@@ -45,7 +43,7 @@ public class GirlService {
 			throw new GirlException(ExceptionEnum.MIDDLE_SCHOOL);
 		}else{
 			//返回 code 99
-			throw new Exception("读书要加钱");
+			throw new GirlException(ExceptionEnum.ADD_MONEY);
 		}
 		
 		//....如果大于16岁，加钱
@@ -57,7 +55,7 @@ public class GirlService {
 	 * @param id
 	 * @return
 	 */
-	public Optional<Girl> findOne(Integer id){
-		return girlRepository.findById(id);
+	public Girl findOne(Integer id){
+		return girlMapper.selectById(id);
 	}
 }

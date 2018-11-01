@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuf.demo.sys.mapper.GirlMapper">
+	
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.yuf.demo.sys.entity.Girl">
+		<id column="id" property="id" />
+		<result column="age" property="age" />
+		<result column="cup_size" property="cupSize" />
+		<result column="name" property="name" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, age, cup_size, name
+    </sql>
+	
+	
+	<select id="getGirlList" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"></include>
+		from girl
+		<where>
+			<if test="age !=null and age !='' ">
+				and age = #{age}
+			</if>
+			<if test="cupSize !=null and cupSize !='' ">
+				and cup_size = #{cupSize}
+			</if>
+			<if test="name !=null and name !='' ">
+				and name = #{name}
+			</if>
+		</where>
+	
+	</select>
+	
+	
+</mapper>
