@@ -1,7 +1,5 @@
 package com.yuf.demo.utils;
 
-import com.yuf.demo.sys.entity.Result;
-
 /**
 * @author 作者 dyf:
 * @version 创建时间：2018年10月18日 下午10:16:19

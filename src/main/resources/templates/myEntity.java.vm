@@ -1,0 +1,83 @@
+package ${package.Entity};
+
+#foreach($pkg in ${table.importPackages})
+import ${pkg};
+#end
+
+/**
+ * <p>
+ * ${table.comment}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Data
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
+#if(${table.convert})
+@TableName("${table.name}" )
+#end
+#if(${superEntityClass})
+public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}>#end {
+#elseif(${activeRecord})
+public class ${entity} extends Model<${entity}> {
+#else
+public class ${entity} implements Serializable{
+#end
+
+private static final long serialVersionUID=1L;
+#if(${field.keyFlag})//如果表有主键id
+/**
+* 创建基本信息
+**/
+public void createDefaultInfo(){
+        this.id=UUID.randomUUID().toString().replaceAll("-" ,"" );
+        }
+#end
+#foreach($field in ${table.fields})
+    #if(${field.keyFlag})
+    /**
+    * 创建基本信息
+    **/
+    public void createDefaultInfo(SysUser user){
+            this.id=UUID.randomUUID().toString().replaceAll("-" ,"" );
+            }
+    #end
+    #if(${field.keyFlag})
+        #set($keyPropertyName=${field.propertyName})
+    #end
+    #if("$!field.comment" != "")
+    /**${field.comment}*/
+    #end
+    #if(${field.keyFlag})
+        #if(${field.keyIdentityFlag})
+        @TableId(value = "${field.name}" , type = IdType.AUTO)
+        #elseif(${field.convert})
+        @TableId("${field.name}" )
+        #end
+    #elseif(${field.convert})
+    @TableField("${field.name}" )
+    #end
+@ApiModelProperty(value = "${field.comment}" , position = $foreach.count)
+private ${field.propertyType} ${field.propertyName};
+#end
+
+#if(${entityColumnConstant})
+    #foreach($field in ${table.fields})
+    public static final String ${field.name.toUpperCase()} ="${field.name}" ;
+
+    #end
+#end
+#if(${activeRecord})
+@Override
+protected Serializable pkVal() {
+    #if(${keyPropertyName})
+            return this.${keyPropertyName};
+    #else
+            return this.id;
+    #end
+        }
+
+#end
+        }

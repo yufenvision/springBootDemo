@@ -92,8 +92,8 @@ public class MyGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.yuf.demo.sys");
-        pc.setModuleName("SysUser");
+        pc.setParent("com.yuf.demo");
+        pc.setModuleName("sys");
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setMapper("mapper");
@@ -149,8 +149,8 @@ public class MyGenerator {
         tc.setXml(null);
         tc.setService("templates/service.java.vm");
         tc.setServiceImpl("templates/serviceImpl.java.vm");
-//        tc.setController("templates/controller.java.vm");
-        tc.setController(null);
+        tc.setController("templates/controller.java.vm");
+//        tc.setController(null);
         // 如上任何一个模块如果设置 空 OR Null 将不生成该模块。
         autoGenerator.setTemplate(tc);
 

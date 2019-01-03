@@ -1,0 +1,87 @@
+package ${package.Controller};
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * ${table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Api(tags = "${table.comment}" )
+@RestController
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}" )
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+@Autowired
+private ${table.serviceName} i${entity}Service;
+
+@ApiOperation(value = "获取全部${table.comment}数据" )
+@RequestMapping(value = "/all${entity}" , method = {RequestMethod.GET})
+public BaseForm<BasePage<${entity}>>getAll${entity}(){
+        BaseForm result=new BaseForm();
+        result.setData(i${entity}Service.selectList(new EntityWrapper<>()));
+        return result;
+        }
+@ApiOperation(value = "分页获取${table.comment}数据" )
+@RequestMapping(value = "/${table.entityPath}ByPage" , method = {RequestMethod.GET})
+public BaseForm<BasePage<${entity}>>get${entity}ByPage(BasePage page,@RequestParam Map params){
+        BaseForm result=new BaseForm();
+        result.setData(i${entity}Service.selectPage(page,new EntityWrapper<>()));
+        return result;
+        }
+
+@ApiOperation(value = "添加${table.comment}数据"
+        , extensions = @Extension(properties = {@ExtensionProperty(name = "resourceType" , value = "button" )
+        , @ExtensionProperty(name = "parentCode" , value = "" )}))
+@ApiResponses(value = {@ApiResponse(code = 1005, message = "操作失败" )})
+@RequestMapping(value = "/${table.entityPath}" , method = {RequestMethod.POST})
+@RequiresPermissions(":add${entity}" )//权限管理;
+public BaseForm add${entity}(${entity} ${table.entityPath}){
+        BaseForm result=new BaseForm();
+    ${table.entityPath}.createDefaultInfo((SysUser)SecurityUtils.getSubject().getPrincipal());
+        if(!i${entity}Service.insert(${table.entityPath})){
+        result.setStatus(BaseForm.Status.FAILURE);
+        }
+        return result;
+        }
+
+@ApiOperation(value = "更改${table.comment}数据"
+        , extensions = @Extension(properties = {@ExtensionProperty(name = "resourceType" , value = "button" )
+        , @ExtensionProperty(name = "parentCode" , value = "" )}))
+@ApiImplicitParams({@ApiImplicitParam(name = "id" , required = true)})
+@ApiResponses(value = {@ApiResponse(code = 1005, message = "操作失败" )})
+@RequestMapping(value = "/${table.entityPath}" , method = {RequestMethod.PUT})
+@RequiresPermissions(":updat${table.entityPath}" )
+public BaseForm updat${table.entityPath}(${entity} ${table.entityPath}){
+        BaseForm result=new BaseForm();
+        if(!i${entity}Service.updateById(${table.entityPath})){
+        result.setStatus(BaseForm.Status.FAILURE);
+        }
+        return result;
+        }
+
+@ApiOperation(value = "删除${table.comment}数据"
+        , extensions = @Extension(properties = {@ExtensionProperty(name = "resourceType" , value = "button" )
+        , @ExtensionProperty(name = "parentCode" , value = "" )}))
+@ApiImplicitParams({@ApiImplicitParam(name = "id" , required = true)})
+@ApiResponses(value = {@ApiResponse(code = 1005, message = "操作失败" )})
+@RequestMapping(value = "/${table.entityPath}" , method = {RequestMethod.DELETE})
+@RequiresPermissions(":del${entity}" )
+public BaseForm del${entity}(@RequestBody String id){
+        BaseForm result=new BaseForm();
+        if(!i${entity}Service.deleteById(id)){
+        result.setStatus(BaseForm.Status.FAILURE);
+        }
+        return result;
+        }
+        }

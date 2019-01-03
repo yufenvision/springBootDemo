@@ -1,4 +1,4 @@
-package com.yuf.demo.sys.entity;
+package com.yuf.demo.utils;
 /**
 * @author 作者 dyf:
 * @version 创建时间：2018年10月18日 下午10:11:21
