@@ -9,7 +9,7 @@
                     <result column="password" property="password"/>
                     <result column="email" property="email"/>
                     <result column="mobile_phone" property="mobilePhone"/>
-                    <result column="org_id" property="orgId"/>
+                    <result column="depart_id" property="departId"/>
                     <result column="status" property="status"/>
                     <result column="is_del" property="isDel"/>
                     <result column="create_by" property="createBy"/>
@@ -20,7 +20,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-            id, username, password, email, mobile_phone, org_id, status, is_del, create_by, create_date, update_date, update_by
+            id, username, password, email, mobile_phone, depart_id, status, is_del, create_by, create_date, update_date, update_by
         </sql>
 
 </mapper>

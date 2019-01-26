@@ -32,7 +32,8 @@ private static final long serialVersionUID=1L;
     * 创建基本信息
     **/
     public void createDefaultInfo(SysUser user){
-    	this.id=UUID.randomUUID().toString().replaceAll("-" ,"" );
+    	this.id = UUID.randomUUID().toString().replaceAll("-" ,"" );
+    	this.createDate = new Date(); 
     }
     
 	@ApiModelProperty(value = "ID" , position = 1)
@@ -52,9 +53,9 @@ private static final long serialVersionUID=1L;
 	@ApiModelProperty(value = "电话号码" , position = 5)
 	private String mobilePhone;
     
-    @TableField("org_id" )
-	@ApiModelProperty(value = "行政区划id" , position = 6)
-	private String orgId;
+    @TableField("depart_id" )
+	@ApiModelProperty(value = "部门id" , position = 6)
+	private String departId;
     /**有效状态（0-激活，1-未激活）*/
 	@ApiModelProperty(value = "有效状态（0-激活，1-未激活）" , position = 7)
 	private String status;
