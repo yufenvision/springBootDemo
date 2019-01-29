@@ -24,6 +24,13 @@ public class ResultForm<T> {
 	 */
 	public enum Status{
 		SUCCESS(200,"成功"),
+        ACCOUNT_WRONG(1001, "账户不存在或未激活"),
+        PASSWORD_WRONG(1002, "密码错误"),
+        NEED_LOGIN(1003,"需要登录"),
+        UNAUTHORIZED(1004, "未授权"),
+        FAILURE(1005, "操作失败"),
+        TIMEOUT(1006, "请求超时"),
+        DUPLICATEDATA(1007,"重复数据"),
 		ERROR(9999,"未知错误");
 		
 		private int status;

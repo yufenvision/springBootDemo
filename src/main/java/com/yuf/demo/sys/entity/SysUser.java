@@ -2,11 +2,13 @@ package com.yuf.demo.sys.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.yuf.demo.business.filecentre.entity.FileInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -78,7 +80,9 @@ private static final long serialVersionUID=1L;
 	
     @ApiModelProperty(value = "头像" , position = 12)
     @TableField(exist = false)
-    private String headPic;
+    private List<FileInfo> fileInfos;
+    
+    
     
 	@Override
 	protected Serializable pkVal() {

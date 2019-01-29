@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.yuf.demo.sys.entity.SysUser;
 import com.yuf.demo.sys.service.ISysUserService;
 import com.yuf.demo.utils.ResultForm;
@@ -62,16 +63,27 @@ public class SysUserController {
 	@ApiOperation(value="查询用户")
 	@ApiImplicitParam(name = "username", value= "用户名")
 	@GetMapping("/getUserPage")
-	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map map){
+	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params){
 		ResultForm<List<SysUser>> result = new ResultForm<>();
-		List<SysUser> list = null;
-		String username = (String) map.get("userName");
-		if(username != null){
-			list = userService.selectList(new EntityWrapper<SysUser>().like("username", username, SqlLike.RIGHT).orderBy(true, "create_date", false));
-		}else{
-			list = userService.selectList((new EntityWrapper<SysUser>().orderBy(true, "create_date", false)));
-		}
+		System.out.println(params);
+		List<SysUser> list = userService.getSysUserPage(params);
 		result.setData(list);
+		return result;
+	}
+	
+	@ApiOperation(value="根据id查询用户")
+	@ApiImplicitParam(name = "userId", value= "用户id")
+	@GetMapping("/getUserById")
+	public ResultForm<SysUser> getUserById(@RequestParam String userId){
+		ResultForm<SysUser> result = new ResultForm<>();
+		SysUser user = userService.getUserById(userId);
+		if(user != null){
+			result.setStatus(ResultForm.Status.SUCCESS);
+			result.setData(user);
+		}else{
+			result.setStatus(ResultForm.Status.FAILURE);
+			result.setMsg("查询结果为空");
+		}
 		return result;
 	}
 }

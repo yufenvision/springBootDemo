@@ -68,7 +68,7 @@ public class MyGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
 //        strategy.setTablePrefix(new String[] { "tb_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[] { "sys_user" }); // 需要生成的表
+        strategy.setInclude(new String[] { "b_file_info" }); // 需要生成的表
 //         strategy.setExclude(new String[]{"r_problem"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -92,8 +92,8 @@ public class MyGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.yuf.demo");
-        pc.setModuleName("sys");
+        pc.setParent("com.yuf.demo.business");
+        pc.setModuleName("filecentre");
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setMapper("mapper");

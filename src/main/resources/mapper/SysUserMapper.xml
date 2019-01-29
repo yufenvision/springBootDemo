@@ -4,23 +4,76 @@
 
         <!-- 通用查询映射结果 -->
         <resultMap id="BaseResultMap" type="com.yuf.demo.sys.entity.SysUser">
-                    <id column="id" property="id"/>
-                    <result column="username" property="username"/>
-                    <result column="password" property="password"/>
-                    <result column="email" property="email"/>
-                    <result column="mobile_phone" property="mobilePhone"/>
-                    <result column="depart_id" property="departId"/>
-                    <result column="status" property="status"/>
-                    <result column="is_del" property="isDel"/>
-                    <result column="create_by" property="createBy"/>
-                    <result column="create_date" property="createDate"/>
-                    <result column="update_date" property="updateDate"/>
-                    <result column="update_by" property="updateBy"/>
+			<id column="id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="password" property="password"/>
+			<result column="email" property="email"/>
+			<result column="mobile_phone" property="mobilePhone"/>
+			<result column="depart_id" property="departId"/>
+			<result column="status" property="status"/>
+			<result column="is_del" property="isDel"/>
+			<result column="create_by" property="createBy"/>
+			<result column="create_date" property="createDate"/>
+			<result column="update_date" property="updateDate"/>
+			<result column="update_by" property="updateBy"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-            id, username, password, email, mobile_phone, depart_id, status, is_del, create_by, create_date, update_date, update_by
+            u.id, u.username, u.password, u.email, u.mobile_phone, u.depart_id, u.status, u.is_del, u.create_by, u.create_date, u.update_date, u.update_by
         </sql>
+
+
+		<resultMap type="com.yuf.demo.sys.entity.SysUser" id="userAllInfo">
+			<id column="id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="password" property="password"/>
+			<result column="email" property="email"/>
+			<result column="mobile_phone" property="mobilePhone"/>
+			<result column="depart_id" property="departId"/>
+			<result column="status" property="status"/>
+			<result column="is_del" property="isDel"/>
+			<result column="create_by" property="createBy"/>
+			<result column="create_date" property="createDate"/>
+			<result column="update_date" property="updateDate"/>
+			<result column="update_by" property="updateBy"/>
+			<collection property="fileInfos" ofType="FileInfo">
+				<id column="fid" property="id"/>
+                <result column="file_name" property="fileName"/>
+                <result column="original_name" property="originalName"/>
+                <result column="busi_type" property="busiType"/>
+                <result column="file_size" property="fileSize"/>
+                <result column="full_path" property="fullPath"/>
+                <result column="upload_time" property="uploadTime"/>
+                <result column="business_id" property="businessId"/>
+			
+			</collection>
+		
+		</resultMap>
+		
+		<sql id="fileInfo_List">
+            f.id as fid, f.file_name, f.original_name, f.busi_type, f.file_size, f.full_path, f.upload_time, f.business_id
+        </sql>
+        
+		<select id="getSysUserPage" resultMap="userAllInfo">
+			select
+			<include refid="Base_Column_List"/>,
+			<include refid="fileInfo_List"/>
+			from sys_user u
+			left join b_file_info f on u.id = f.business_id
+			where u.id in (select temp.id from (select u.id from sys_user u order by u.create_date DESC limit 0,5) as temp)
+			order by u.create_date DESC
+<!-- 			limit 0,5 -->
+		</select>
+
+
+		<select id="getUserById" resultMap="userAllInfo">
+			select
+			<include refid="Base_Column_List"/>,
+			<include refid="fileInfo_List"/>
+			from sys_user u
+			left join b_file_info f on u.id = f.business_id
+			where u.id = #{userId}
+		</select>
 
 </mapper>
