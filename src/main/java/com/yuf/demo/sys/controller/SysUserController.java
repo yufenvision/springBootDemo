@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.yuf.demo.sys.entity.SysUser;
 import com.yuf.demo.sys.service.ISysUserService;
@@ -41,7 +42,7 @@ public class SysUserController {
 	@Autowired
 	private ISysUserService userService;
 	
-	@ApiOperation(value="导入摄像头信息")
+	@ApiOperation(value="导入用户信息")
 	@ApiImplicitParam(name = "importFile" , value = "导入excel文件" )
 	@GetMapping("/userImport")
 	public ResultForm userImport(@RequestParam("importFile") MultipartFile file){
@@ -60,10 +61,10 @@ public class SysUserController {
 		return result;
 	}
 	
-	@ApiOperation(value="查询用户")
+	@ApiOperation(value="用户分页查询")
 	@ApiImplicitParam(name = "username", value= "用户名")
 	@GetMapping("/getUserPage")
-	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params){
+	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params, Page<SysUser> page){
 		ResultForm<List<SysUser>> result = new ResultForm<>();
 		System.out.println(params);
 		List<SysUser> list = userService.getSysUserPage(params);
@@ -71,7 +72,7 @@ public class SysUserController {
 		return result;
 	}
 	
-	@ApiOperation(value="根据id查询用户")
+	@ApiOperation(value="根据用户id查询")
 	@ApiImplicitParam(name = "userId", value= "用户id")
 	@GetMapping("/getUserById")
 	public ResultForm<SysUser> getUserById(@RequestParam String userId){
