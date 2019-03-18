@@ -299,14 +299,26 @@ public class FileInfoController {
 	}
 	
 	/*
-	 * 清理脏数据的接口
-	 * 2、根据fileName清楚掉数据库中没有，而本地有的文件（文件数据未删除，刷库会发生）
+	 * 清理脏数据的接口,根据fileName清除掉:
+	 * 2、数据库中没有，而本地有的文件（文件数据未删除，刷库会发生）
 	 */
-	@ApiOperation(value="删除-未关联到数据库的本地文件")
+	@ApiOperation(value="删除-库中没有但本地有的文件")
 	@DeleteMapping("/cleanFileNotInDB")
 	public ResultForm cleanFileNotInDB(){
 		ResultForm result = new ResultForm();
 		result.setData(fileInfoService.deleteFileNotInDB());
+		return result;
+	}
+	
+	/**
+	 * 清理脏数据的接口：数据中有，本地没有的文件
+	 * @return
+	 */
+	@ApiOperation(value="删除-库中有但本地没有的文件")
+	@DeleteMapping("/cleanFileNotInDisk")
+	public ResultForm cleanFileNotInDisk(){
+		ResultForm result = new ResultForm();
+		result.setData(fileInfoService.deleteFileNotInDisk());
 		return result;
 	}
 }

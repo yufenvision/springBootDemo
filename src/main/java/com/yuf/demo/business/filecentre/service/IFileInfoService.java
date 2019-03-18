@@ -56,10 +56,17 @@ public interface IFileInfoService extends IService<FileInfo> {
 //    BasePage getFileByParams(Map params,BasePage page);
 
     /**
-     * 删除没有在数据库中的本地文件
+     * 删除数据库没有，本地有的文件
      * @return
      */
     List<String> deleteFileNotInDB();
+    
+    
+    /**
+     * 删除数据库有，本地没有的文件
+     * @return
+     */
+    List<String> deleteFileNotInDisk();
     
     /**
      * 将文件存入本地磁盘

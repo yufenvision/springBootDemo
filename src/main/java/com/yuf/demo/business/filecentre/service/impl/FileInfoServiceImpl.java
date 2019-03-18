@@ -95,6 +95,29 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
 
     }
 
+    /**
+     * 读取本地所有文件名
+     * @param storageBPath 文件存储路径
+     * @return
+     */
+    public List<String> getAllFileNameInDisk(String storageBPath){
+    	if(storageBPath == null || "".equals(storageBPath))return null;
+    	File mainFile = new File(storageBPath);
+		List<String> fileFullNames = new ArrayList<>();
+		File[] files = mainFile.listFiles();
+		for (File file : files) {
+			if(file.isDirectory()){
+				File[] fileNames = file.listFiles();
+				List<String> names = new ArrayList<>(fileNames.length);
+				for (File f : fileNames) {
+					names.add(file.getName()+"/"+f.getName());
+				}
+				fileFullNames.addAll(names);
+			}
+		}
+		return fileFullNames;
+    }
+    
     //删除数据库中不存在本地文件
     @Override
     public List<String> deleteFileNotInDB(){
@@ -128,6 +151,18 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     	return delFileNames;
     }
     
+    @Override
+   	public List<String> deleteFileNotInDisk() {
+       	//读取本地所有文件名
+   		List<String> fileFullNames = getAllFileNameInDisk(storageBasePath);
+   		//数据库所有文件名
+   		List<String> fileInfosFullPath = fileInfoMapper.getFullPath(null);
+   		fileInfosFullPath.removeAll(fileFullNames);
+//   		fileBusiMapper.delByFullPath(fileInfosFullPath);
+   		fileInfoMapper.delFileByFullPath(fileInfosFullPath);
+   		
+   		return fileInfosFullPath;
+   	}
 //    @Override
 //    public BasePage<T> getFileByParams(Map params,BasePage page) {
 //    	String busiType = (String) params.get("busiType");

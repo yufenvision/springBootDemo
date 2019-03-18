@@ -39,4 +39,10 @@ public interface FileInfoMapper extends BaseMapper<FileInfo> {
 	 */
 	List<String> getFullPath(String originalName);
 	
+	/**
+	 * 根据文件全路径名删除文件
+	 * @param pathList
+	 * @return
+	 */
+	Integer delFileByFullPath(List<String> pathList);
 }
