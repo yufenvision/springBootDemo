@@ -104,7 +104,12 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>3.2.0</version>
         </dependency>
-        
+        <!-- httpclient for IM网易云信-->
+		<dependency>
+  			<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient</artifactId>
+  			<version>4.5.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
