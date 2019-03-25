@@ -43,7 +43,7 @@ public class GirlController {
 	}
 	
 	@GetMapping("/girlOne/{id}")
-	public Girl girlOne(@PathVariable("id") Integer id){
+	public Girl girlOne(@PathVariable("id") String id){
 		return girlMapper.selectById(id);
 	}
 	
