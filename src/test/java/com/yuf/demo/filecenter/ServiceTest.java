@@ -1,4 +1,4 @@
-package com.yuf.demo.filecentre;
+package com.yuf.demo.filecenter;
 
 import java.util.List;
 

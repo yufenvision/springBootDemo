@@ -93,7 +93,7 @@ public class MyGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent("com.yuf.demo.business");
-        pc.setModuleName("filecentre");
+        pc.setModuleName("filecenter");
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setMapper("mapper");

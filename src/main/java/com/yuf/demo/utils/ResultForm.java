@@ -1,5 +1,9 @@
 package com.yuf.demo.utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ResultForm<T> {
 	
 	/**
@@ -70,6 +74,5 @@ public class ResultForm<T> {
 	public void setData(T data) {
 		this.data = data;
 	}
-	
 	
 }

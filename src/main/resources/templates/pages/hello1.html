@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <link rel="stylesheet" href="/css/baseCss.css">
+    <title>Hello</title>
+</head>
+<body>
+	<h1 th:text="${message}">Hello World</h1>
+	<h1 th:text="${message}"></h1>
+	<hr>
+	<ul th:each="SysUser,iterStat : ${users}"> 
+	   <li th:text="${SysUser.id}">1</li>
+	   <li th:text="${SysUser.username}">姓名</li>
+	   <li th:text="${SysUser.password}">密码</li>
+	   <li th:text="${SysUser.email}">email</li>
+	   <li th:text="${SysUser.mobilePhone}">电话号码</li>
+	</ul>
+	
+</body>
+</html>

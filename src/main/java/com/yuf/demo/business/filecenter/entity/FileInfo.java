@@ -1,4 +1,4 @@
-package com.yuf.demo.business.filecentre.entity;
+package com.yuf.demo.business.filecenter.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

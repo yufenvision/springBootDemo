@@ -1,4 +1,4 @@
-package com.yuf.demo.business.filecentre.controller;
+package com.yuf.demo.business.filecenter.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,11 +28,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.yuf.demo.business.filecentre.entity.FileInfo;
-import com.yuf.demo.business.filecentre.mapper.FileInfoMapper;
-import com.yuf.demo.business.filecentre.service.IFileInfoService;
+import com.yuf.demo.business.filecenter.entity.FileInfo;
+import com.yuf.demo.business.filecenter.mapper.FileInfoMapper;
+import com.yuf.demo.business.filecenter.service.IFileInfoService;
 import com.yuf.demo.utils.ResultForm;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +46,9 @@ import io.swagger.annotations.ApiOperation;
  * @author yuf
  * @since 2019-01-27
  */
+@Api(tags="文件中心接口")
 @RestController
-@RequestMapping("/filecentre/fileInfo" )
+@RequestMapping("/filecenter/fileInfo" )
 public class FileInfoController {
 	@Value("${storage.path}")
 	private String storagePath;

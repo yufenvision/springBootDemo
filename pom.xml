@@ -50,6 +50,13 @@
 			<artifactId>mybatis-plus</artifactId>
 			<version>2.3</version>
 		</dependency>
+		
+		<!-- 使用thymeleaf模板-->
+		<dependency>
+		     <groupId>org.springframework.boot</groupId>
+		     <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
 		<!-- velocity模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>

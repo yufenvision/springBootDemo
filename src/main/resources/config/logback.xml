@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configration>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
 	<contextName>logback</contextName>
 	
     <!--参数-->
-	<property name="FILE_SIZE" value="50MB"/> 
-	<property name="LOG_PATH" value="log"/>
-
+	<property name="FILE_SIZE" value="50MB"/><!--文件大小-->
+    <property name="MAX_HISTORY" value="30"/><!--最大历史保留数-->
+	<property name="log.path" value="src/main/resources/log"/>
+	
+	<!-- 输出到控制台 -->
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender"> 
 		<encoder> 
 <!-- 			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>  -->
@@ -13,4 +15,10 @@
 		</encoder> 
 	</appender>
 
-</configration>
+	<!--输出级别基本控制-->
+	<root level="info">
+        <appender-ref ref="console"/>
+        <!--<appender-ref ref="file" />-->
+    </root>
+    
+</configuration>

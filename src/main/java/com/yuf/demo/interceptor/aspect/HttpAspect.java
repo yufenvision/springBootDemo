@@ -1,4 +1,4 @@
-package com.yuf.demo.config.aspect;
+package com.yuf.demo.interceptor.aspect;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,7 +36,8 @@ public class HttpAspect {
 	
 	private final static Logger logger = LoggerFactory.getLogger(HttpAspect.class);
 	
-	@Pointcut("execution(public * com.yuf.demo.sys.controller.*.*(..))")
+//	@Pointcut("execution(public * com.yuf.demo.sys.controller.*.*(..))")
+	@Pointcut("@annotation(LogInfo)")
 	public void log(){
 	}
 	

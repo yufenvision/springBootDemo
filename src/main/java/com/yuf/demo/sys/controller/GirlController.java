@@ -14,19 +14,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yuf.demo.interceptor.aspect.LogInfo;
 import com.yuf.demo.sys.entity.Girl;
 import com.yuf.demo.sys.mapper.GirlMapper;
 import com.yuf.demo.sys.service.GirlService;
 import com.yuf.demo.utils.ResultForm;
 
+import io.swagger.annotations.Api;
+
 /**
  * @author dyf
  * @version 2018年10月15日下午11:01:28
  */
+@Api(tags="女孩测试接口")
 @RestController
+@RequestMapping("/sys" )
 public class GirlController {
 	
 	private final static Logger logger = LoggerFactory.getLogger(GirlController.class);
@@ -42,6 +48,7 @@ public class GirlController {
 		return girlMapper.selectList(null);
 	}
 	
+	@LogInfo
 	@GetMapping("/girlOne/{id}")
 	public Girl girlOne(@PathVariable("id") String id){
 		return girlMapper.selectById(id);

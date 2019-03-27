@@ -1,7 +1,7 @@
-package com.yuf.demo.business.filecentre.mapper;
+package com.yuf.demo.business.filecenter.mapper;
 
-import com.yuf.demo.business.filecentre.entity.FileInfo;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.yuf.demo.business.filecenter.entity.FileInfo;
 
 import java.util.List;
 import java.util.Map;

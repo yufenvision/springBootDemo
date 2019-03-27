@@ -1,18 +1,26 @@
 package com.yuf.demo.sys.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.yuf.demo.sys.entity.GirlProperties;
+import com.yuf.demo.sys.entity.SysUser;
+import com.yuf.demo.sys.service.ISysUserService;
 
-@RestController
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
+
+@Api(tags="测试接口")
+@Slf4j
+@Controller
+@RequestMapping("/page")
 public class ControllerTest {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ControllerTest.class);
 	
 	
 	@Autowired
@@ -20,11 +28,16 @@ public class ControllerTest {
 	
 	@Value("${value}")
 	private String value;
+	@Autowired
+	private ISysUserService userService;
 	
 	@RequestMapping("/hello")
-	public String hello(){
-		logger.info("调用了hello接口");
-		return girlProperties.getCupSize()+"---"+girlProperties.getAge();
+	public String hello(ModelMap map){
+		map.put("message", "我用了新的方式");
+		List<SysUser> list = userService.selectList(null);
+		map.put("users", list);
+//		return girlProperties.getCupSize()+"---"+girlProperties.getAge();
+		return "hello1";
 	}
 	
 	@RequestMapping("/value")
@@ -32,4 +45,10 @@ public class ControllerTest {
 		return value;
 	}
 	
+	@RequestMapping("/")
+	public ModelAndView getHello(ModelMap map){
+		ModelAndView modelAndView = new ModelAndView("hello");
+		map.addAttribute("message", "回家哈哈");
+		return modelAndView;
+	}
 }

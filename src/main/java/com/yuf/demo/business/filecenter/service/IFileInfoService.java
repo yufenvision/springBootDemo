@@ -1,6 +1,4 @@
-package com.yuf.demo.business.filecentre.service;
-
-import com.yuf.demo.business.filecentre.entity.FileInfo;
+package com.yuf.demo.business.filecenter.service;
 
 import java.util.List;
 import java.util.Map;
@@ -8,6 +6,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.yuf.demo.business.filecenter.entity.FileInfo;
 
 /**
  * <p>

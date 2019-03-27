@@ -1,4 +1,4 @@
-package com.yuf.demo.business.filecentre.service.impl;
+package com.yuf.demo.business.filecenter.service.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,9 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.yuf.demo.business.filecentre.entity.FileInfo;
-import com.yuf.demo.business.filecentre.mapper.FileInfoMapper;
-import com.yuf.demo.business.filecentre.service.IFileInfoService;
+import com.yuf.demo.business.filecenter.entity.FileInfo;
+import com.yuf.demo.business.filecenter.mapper.FileInfoMapper;
+import com.yuf.demo.business.filecenter.service.IFileInfoService;
 
 /**
  * <p>

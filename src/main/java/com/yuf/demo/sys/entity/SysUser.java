@@ -8,7 +8,7 @@ import java.util.UUID;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import com.yuf.demo.business.filecentre.entity.FileInfo;
+import com.yuf.demo.business.filecenter.entity.FileInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -35,7 +35,9 @@ private static final long serialVersionUID=1L;
     **/
     public void createDefaultInfo(SysUser user){
     	this.id = UUID.randomUUID().toString().replaceAll("-" ,"" );
-    	this.createDate = new Date(); 
+    	this.createDate = new Date();
+    	this.isDel = "0";
+    	this.status = "0";
     }
     
 	@ApiModelProperty(value = "ID" , position = 1)

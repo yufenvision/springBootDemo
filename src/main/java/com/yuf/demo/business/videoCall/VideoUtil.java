@@ -29,6 +29,7 @@ public class VideoUtil extends BaseVideoConfig{
 		getRoomStatus("123456");
 	}
 	
+	//1、查询某个房间状态信息
 	public static void getRoomStatus(String roomId) throws IOException{
 		String url = "https://roomserver-dev.netease.im/v1/api/rooms/" + roomId;
 		
@@ -40,6 +41,19 @@ public class VideoUtil extends BaseVideoConfig{
 		System.out.println(EntityUtils.toString(response.getEntity(), "utf-8"));
 		
 	}
+	
+	//2.查询某个房间成员信息https://roomserver-dev.netease.im/v1/api/rooms/{id}/members
+	
+	//3.删除某个房间https://roomserver-dev.netease.im/v1/api/rooms/{id}
+	
+	//4.管理员踢出房间内的指定用户并禁止后续加入https://roomserver-dev.netease.im/v1/api/kicklist/{cid}/members/{accid}
+	
+	//5.管理员获取房间中踢出的人员列表https://roomserver-dev.netease.im/v1/api/kicklist/{cid}
+	
+	//6.管理员撤销踢人操作https://roomserver-dev.netease.im/v1/api/kicklist/{cid}/members/{accid}
+	
+	//7.管理员设置频道录制https://roomserver-dev.netease.im/v1/api/record/{cid}
+	
 	
 	public static HttpPost initPost(String url){
 		HttpPost httpPost = new HttpPost(url);
