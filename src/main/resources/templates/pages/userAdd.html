@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <link rel="stylesheet" href="/css/baseCss.css">
+    <title>用户新增界面</title>
+</head>
+<body>
+	<h1 th:text="${message}">用户新增表单</h1>
+	<hr>
+    <form action="#" th:action="@{/sys/sysUser/userAdd}" th:object="${sysUser}" method="post">
+        <p>用户名: <input type="text" th:field="*{username}" /></p>
+        <p>密码: <input type="text" th:field="*{password}" /></p>
+        <p>邮箱: <input type="text" th:field="*{email}" /></p>
+        <p>电话号码: <input type="text" th:field="*{mobilePhone}" /></p>
+        <p>角色: <input type="text" th:field="*{roleId}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+	
+	<script type="text/javascript" src="/js/testjs.js"></script>
+</body>
+</html>

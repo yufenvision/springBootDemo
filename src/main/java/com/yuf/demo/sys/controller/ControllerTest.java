@@ -37,7 +37,10 @@ public class ControllerTest {
 		List<SysUser> list = userService.selectList(null);
 		map.put("users", list);
 //		return girlProperties.getCupSize()+"---"+girlProperties.getAge();
-		return "hello1";
+		SysUser sysUser = new SysUser();
+		sysUser.createDefaultInfo();
+		map.put("sysUser", sysUser);
+		return "userAdd";
 	}
 	
 	@RequestMapping("/value")

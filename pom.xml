@@ -117,6 +117,13 @@
   			<artifactId>httpclient</artifactId>
   			<version>4.5.6</version>
 		</dependency>
+		<!-- 工作流引擎 -->
+		<dependency>  
+            <groupId>org.activiti</groupId>  
+            <artifactId>activiti-spring-boot-starter-basic</artifactId>  
+            <version>6.0.0</version>  
+        </dependency> 
+
 	</dependencies>
 
 	<build>

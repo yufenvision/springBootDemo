@@ -49,7 +49,7 @@ public class SysUserController {
 	@ApiOperation(value="用户分页查询")
 	@ApiImplicitParam(name = "username", value= "用户名")
 	@GetMapping("/getUserPage")
-	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params, Page<SysUser> page){
+	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params, Page page){
 		return ResultUtil.getResult(userService.getSysUserPage(params));
 	}
 
@@ -72,7 +72,7 @@ public class SysUserController {
 	
 	@ApiOperation(value="新增用户")
 	@PostMapping("/userAdd")
-	public ResultForm<SysUser> userAdd(@RequestBody SysUser user){
+	public ResultForm<SysUser> userAdd(SysUser user){
 		return ResultUtil.getResult(userService.insert(user), ResultForm.Status.FAILURE, "新增失败");
 	}
 	

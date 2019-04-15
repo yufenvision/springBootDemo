@@ -27,7 +27,7 @@ public class SysUserTest {
 		int i = 20;
 		while(i > 0){
 			SysUser user = new SysUser();
-			user.createDefaultInfo(user);
+			user.createDefaultInfo();
 			user.setUsername("用户" + i);
 			user.setPassword("密码：" + (int)(Math.random()*i));
 			user.setMobilePhone("电话号码");

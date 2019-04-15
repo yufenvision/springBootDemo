@@ -9,18 +9,20 @@
 			<result column="password" property="password"/>
 			<result column="email" property="email"/>
 			<result column="mobile_phone" property="mobilePhone"/>
+			<result column="role_id" property="roleId"/>
 			<result column="depart_id" property="departId"/>
+			<result column="org_id" property="orgId"/>
 			<result column="status" property="status"/>
 			<result column="is_del" property="isDel"/>
 			<result column="create_by" property="createBy"/>
 			<result column="create_date" property="createDate"/>
-			<result column="update_date" property="updateDate"/>
 			<result column="update_by" property="updateBy"/>
+			<result column="update_date" property="updateDate"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-            u.id, u.username, u.password, u.email, u.mobile_phone, u.depart_id, u.status, u.is_del, u.create_by, u.create_date, u.update_date, u.update_by
+            u.id, u.username, u.password, u.email, u.mobile_phone, u.role_id, u.depart_id, u.org_id, u.status, u.is_del, u.create_by, u.create_date, u.update_date, u.update_by
         </sql>
 
 

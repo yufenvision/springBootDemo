@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h1 th:text="${message}">Hello World</h1>
-	<h1 th:text="${message}"></h1>
+	<h2 id="title2" th:text="${message}"></h2>
 	<hr>
 	<ul th:each="SysUser,iterStat : ${users}"> 
 	   <li th:text="${SysUser.id}">1</li>
@@ -17,5 +17,6 @@
 	   <li th:text="${SysUser.mobilePhone}">电话号码</li>
 	</ul>
 	
+	<script type="text/javascript" src="/js/testjs.js"></script>
 </body>
 </html>

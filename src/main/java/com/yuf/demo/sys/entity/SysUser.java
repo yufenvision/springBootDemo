@@ -33,7 +33,7 @@ private static final long serialVersionUID=1L;
     /**
     * 创建基本信息
     **/
-    public void createDefaultInfo(SysUser user){
+    public void createDefaultInfo(){
     	this.id = UUID.randomUUID().toString().replaceAll("-" ,"" );
     	this.createDate = new Date();
     	this.isDel = "0";
@@ -57,30 +57,36 @@ private static final long serialVersionUID=1L;
 	@ApiModelProperty(value = "电话号码" , position = 5)
 	private String mobilePhone;
     
+    @TableField("role_id" )
+    @ApiModelProperty(value = "角色id" , position = 6)
+    private String roleId;
     @TableField("depart_id" )
-	@ApiModelProperty(value = "部门id" , position = 6)
-	private String departId;
+    @ApiModelProperty(value = "部门id" , position = 7)
+    private String departId;
+    @TableField("org_id" )
+    @ApiModelProperty(value = "行政区划id" , position = 8)
+    private String orgId;
     /**有效状态（0-激活，1-未激活）*/
-	@ApiModelProperty(value = "有效状态（0-激活，1-未激活）" , position = 7)
+	@ApiModelProperty(value = "有效状态（0-激活，1-未激活）" , position = 9)
 	private String status;
     /**是否删除（0-未删除，1-删除）*/
     @TableField("is_del" )
-	@ApiModelProperty(value = "是否删除（0-未删除，1-删除）" , position = 8)
+	@ApiModelProperty(value = "是否删除（0-未删除，1-删除）" , position = 10)
 	private String isDel;
     @TableField("create_by" )
-	@ApiModelProperty(value = "创建人" , position = 9)
+	@ApiModelProperty(value = "创建人" , position = 11)
 	private String createBy;
     @TableField("create_date" )
-	@ApiModelProperty(value = "创建时间" , position = 10)
+	@ApiModelProperty(value = "创建时间" , position = 12)
 	private Date createDate;
-    @TableField("update_date" )
-	@ApiModelProperty(value = "更新时间" , position = 11)
-	private Date updateDate;
     @TableField("update_by" )
-	@ApiModelProperty(value = "更新人" , position = 12)
-	private String updateBy;
+    @ApiModelProperty(value = "更新人" , position = 13)
+    private String updateBy;
+    @TableField("update_date" )
+	@ApiModelProperty(value = "更新时间" , position = 14)
+	private Date updateDate;
 	
-    @ApiModelProperty(value = "头像" , position = 12)
+    @ApiModelProperty(value = "头像" , position = 15)
     @TableField(exist = false)
     private List<FileInfo> fileInfos;
     

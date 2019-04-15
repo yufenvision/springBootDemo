@@ -32,28 +32,41 @@ CREATE TABLE `b_file_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件表';
 
 -- ----------------------------
--- Table structure for boy
+-- Table structure for sys_department
 -- ----------------------------
-DROP TABLE IF EXISTS `boy`;
-CREATE TABLE `boy` (
+DROP TABLE IF EXISTS `sys_department`;
+CREATE TABLE `sys_department` (
   `id` varchar(32) NOT NULL,
-  `name` varchar(20) DEFAULT NULL,
-  `age` int(3) DEFAULT NULL,
-  `girl_id` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `departname` varchar(50) NOT NULL COMMENT '部门名称',
+  `description` varchar(1000) DEFAULT NULL COMMENT '描述',
+  `parent_id` varchar(32) DEFAULT NULL COMMENT '父部门ID',
+  `depart_code` varchar(64) DEFAULT NULL COMMENT '部门编码',
+  `mobile` varchar(32) DEFAULT NULL COMMENT '手机号',
+  `fax` varchar(32) DEFAULT NULL COMMENT '传真',
+  `address` varchar(100) DEFAULT NULL COMMENT '地址',
+  `depart_order` varchar(5) DEFAULT '0' COMMENT '排序',
+  PRIMARY KEY (`id`),
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `sys_department_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `sys_department` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for girl
+-- Table structure for sys_role
 -- ----------------------------
-DROP TABLE IF EXISTS `girl`;
-CREATE TABLE `girl` (
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role` (
   `id` varchar(32) NOT NULL,
-  `age` int(11) DEFAULT NULL,
-  `cup_size` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `role_name` varchar(50) DEFAULT NULL COMMENT '角色名称',
+  `role_code` varchar(50) DEFAULT NULL COMMENT '角色编码',
+  `role_rank` int(11) DEFAULT NULL COMMENT '角色级别(1~19)',
+  `org_rank` varchar(2) DEFAULT NULL COMMENT '行政区划级别(1~5)',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
+  `update_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `role_code_unique` (`role_code`) USING BTREE COMMENT '角色编码唯一性'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色表';
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -61,17 +74,19 @@ CREATE TABLE `girl` (
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` varchar(32) NOT NULL,
-  `username` varchar(30) DEFAULT NULL COMMENT '用户名',
-  `password` varchar(30) DEFAULT NULL COMMENT '密码',
+  `username` varchar(30) NOT NULL COMMENT '用户名',
+  `password` varchar(30) DEFAULT '666666' COMMENT '密码',
   `email` varchar(30) DEFAULT NULL COMMENT '邮箱',
   `mobile_phone` varchar(30) DEFAULT NULL COMMENT '电话号码',
+  `role_id` varchar(32) DEFAULT NULL COMMENT '角色id',
   `depart_id` varchar(32) DEFAULT NULL COMMENT '部门id',
+  `org_id` varchar(32) DEFAULT NULL COMMENT '行政区划id',
   `status` varchar(1) DEFAULT NULL COMMENT '有效状态（0-激活，1-未激活）',
   `is_del` varchar(1) DEFAULT NULL COMMENT '是否删除（0-未删除，1-删除）',
-  `create_by` varchar(30) DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL,
-  `update_date` datetime DEFAULT NULL,
-  `update_by` varchar(30) DEFAULT NULL,
+  `create_by` varchar(30) DEFAULT NULL COMMENT '创建人',
+  `create_date` datetime DEFAULT NULL COMMENT '创建日期',
+  `update_by` varchar(30) DEFAULT NULL COMMENT '更新人',
+  `update_date` datetime DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email_unique` (`email`) USING BTREE
+  UNIQUE KEY `username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
