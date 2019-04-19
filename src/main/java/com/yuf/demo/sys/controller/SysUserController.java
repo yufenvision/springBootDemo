@@ -1,10 +1,13 @@
 package com.yuf.demo.sys.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +40,8 @@ import javassist.runtime.Desc;
  * @since 2018-11-02
  */
 @Api(tags="用户管理接口")
-@RestController
+//@RestController
+@Controller
 @RequestMapping("/sys/sysUser" )
 public class SysUserController {
 	
@@ -45,6 +49,17 @@ public class SysUserController {
 	private String storagePath;
 	@Autowired
 	private ISysUserService userService;
+	
+	@RequestMapping("/userIndex")
+	public String index(ModelMap map){
+		map.put("message", "用户模块首页");
+		SysUser sysUser = new SysUser();
+		sysUser.createDefaultInfo();
+		map.put("sysUser", sysUser);
+		map.put("users", userService.getSysUserPage(new HashMap()));
+		return "bootstrap/index";
+	}
+	
 	
 	@ApiOperation(value="用户分页查询")
 	@ApiImplicitParam(name = "username", value= "用户名")
@@ -72,14 +87,16 @@ public class SysUserController {
 	
 	@ApiOperation(value="新增用户")
 	@PostMapping("/userAdd")
-	public ResultForm<SysUser> userAdd(SysUser user){
-		return ResultUtil.getResult(userService.insert(user), ResultForm.Status.FAILURE, "新增失败");
+	public String userAdd(SysUser user){
+		ResultUtil.getResult(userService.insert(user), ResultForm.Status.FAILURE, "新增失败");
+		return "redirect:/sys/sysUser/userIndex";
 	}
 	
 	@ApiOperation(value="修改用户")
 	@PostMapping("/userUpdate")
-	public ResultForm<SysUser> userUpdate(@RequestBody SysUser user){
-		return ResultUtil.getResult(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())), ResultForm.Status.FAILURE, "修改失败");
+	public String userUpdate(@RequestBody SysUser user){
+		ResultUtil.getResult(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())), ResultForm.Status.FAILURE, "修改失败");
+		return "redirect:/sys/sysUser/userIndex";
 	}
 	
 	//逻辑删除

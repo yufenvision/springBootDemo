@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ImportResource;
 
 @Configuration
 @ImportResource("classpath*:spring-myCofig.xml")
+//@ImportResource("com/yuf/demo/myTest/configTest/spring-myCofig.xml")
 public class MyConfigurationByXML {
 
 	public MyConfigurationByXML() {
