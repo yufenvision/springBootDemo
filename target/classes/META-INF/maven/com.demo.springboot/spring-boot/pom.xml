@@ -50,6 +50,13 @@
 			<artifactId>mybatis-plus</artifactId>
 			<version>2.3</version>
 		</dependency>
+		
+		<!-- 使用thymeleaf模板-->
+		<dependency>
+		     <groupId>org.springframework.boot</groupId>
+		     <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
 		<!-- velocity模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -104,7 +111,19 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>3.2.0</version>
         </dependency>
-        
+        <!-- httpclient for IM网易云信-->
+		<dependency>
+  			<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient</artifactId>
+  			<version>4.5.6</version>
+		</dependency>
+		<!-- 工作流引擎 -->
+		<dependency>  
+            <groupId>org.activiti</groupId>  
+            <artifactId>activiti-spring-boot-starter-basic</artifactId>  
+            <version>6.0.0</version>  
+        </dependency> 
+
 	</dependencies>
 
 	<build>
