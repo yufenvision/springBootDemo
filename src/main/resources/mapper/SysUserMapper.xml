@@ -63,9 +63,8 @@
 			<include refid="fileInfo_List"/>
 			from sys_user u
 			left join b_file_info f on u.id = f.business_id
-			where u.id in (select temp.id from (select u.id from sys_user u order by u.create_date DESC limit 0,10) as temp)
 			order by u.create_date DESC
-<!-- 			limit 0,5 -->
+
 		</select>
 
 

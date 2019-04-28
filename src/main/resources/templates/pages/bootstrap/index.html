@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -189,7 +189,27 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Striped Rows Table
-                            <a href="#">新增</a>
+                            <a id="userAdd" >新增</a>
+                            <div class="userAddForm" style="display: none">
+                                <form action="#" th:action="@{/sys/sysUser/userAdd}" th:object="${sysUser}" method="post">
+                                    <p>用户名: <input type="text" th:field="*{username}" /></p>
+                                    <p>密码: <input type="text" th:field="*{password}" /></p>
+                                    <p>邮箱: <input type="text" th:field="*{email}" /></p>
+                                    <p>电话号码: <input type="text" th:field="*{mobilePhone}" /></p>
+                                    <p>角色: <input type="text" th:field="*{roleId}" /></p>
+                                    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /><input class="userAddForm-hide" type="button" value=" 关闭"></p>
+                                </form>
+                            </div>
+                            <div class="userUpdateForm" style="display: none">
+                                <form action="#" th:action="@{/sys/sysUser/userUpdate}" th:object="${sysUser}" method="post">
+                                    <p>用户名: <input type="text" th:field="*{username}" /></p>
+                                    <p>密码: <input type="text" th:field="*{password}" /></p>
+                                    <p>邮箱: <input type="text" th:field="*{email}" /></p>
+                                    <p>电话号码: <input type="text" th:field="*{mobilePhone}" /></p>
+                                    <p>角色: <input type="text" th:field="*{roleId}" /></p>
+                                    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /><input class="userAddForm-hide" type="button" value=" 关闭"></p>
+                                </form>
+                            </div>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -203,6 +223,8 @@
                                             <th>电话号码</th>
                                             <th>角色</th>
                                             <th>部门</th>
+                                            <th>创建日期</th>
+                                            <th>操作</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -213,6 +235,11 @@
                                             <td th:text="${user.mobilePhone}">
                                             <td th:text="${user.roleId}">
                                             <td th:text="${user.departId}">
+                                            <td th:text="${#dates.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}">
+                                            <td>
+                                                <a class="userUpdate">编辑 </a>
+                                                <a th:href="@{/sys/sysUser/userDel(id=${user.id})}"> 删除</a>
+                                            </td>
                                         </tr>
                                         
                                     </tbody>
@@ -243,7 +270,21 @@
     <script src="/assets/js/jquery.metisMenu.js"></script>
        <!-- CUSTOM SCRIPTS -->
     <script src="/assets/js/custom.js"></script>
-    
+    <script>
+        $("#userAdd").click(function(){
+            $(".userAddForm").show()
+        })
+        $(".userAddForm-hide").click(function(){
+            $(".userAddForm").hide()
+        })
+
+        $(".userUpdate").click(function(){
+            $(".userUpdateForm").show()
+        })
+        $(".userAddForm-hide").click(function(){
+            $(".userUpdateForm").hide()
+        })
+    </script>
 
 
 </body>

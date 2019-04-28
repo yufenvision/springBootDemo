@@ -83,10 +83,11 @@ public class SysUserController {
 	@ApiOperation(value="新增用户")
 	@PostMapping("/userAdd")
 	public String userAdd(SysUser user){
+		user.createDefaultInfo();
 		new ResultForm(userService.insert(user), "新增失败");
 		return "redirect:/sys/sysUser/userIndex";
 	}
-	
+
 	@ApiOperation(value="修改用户")
 	@PostMapping("/userUpdate")
 	public String userUpdate(@RequestBody SysUser user){
@@ -96,13 +97,10 @@ public class SysUserController {
 	
 	//逻辑删除
 	@ApiOperation(value="删除用户")
-	@ApiImplicitParam(name = "ids", value ="[\"id1\",\"id2\",....]")
-	@DeleteMapping("/userDel")
-	public ResultForm<Map<String, Integer>> userDel(@RequestBody List<String> ids){
-		int success = 0;
-		for (String id : ids) {
-			success = userService.deleteById(id) ? ++success : success;
-		}
-		return ResultUtil.getResult(ids.size(), success);
+	@ApiImplicitParam(name = "用户id", value ="id")
+	@GetMapping("/userDel")
+	public String userDel(String id){
+		new ResultForm(userService.deleteById(id), "删除失败");
+		return "redirect:/sys/sysUser/userIndex";
 	}
 }
