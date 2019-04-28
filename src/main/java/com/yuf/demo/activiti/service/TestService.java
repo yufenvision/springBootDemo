@@ -1,8 +1,8 @@
 package com.yuf.demo.activiti.service;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.stereotype.Service;
 
 /**

@@ -8,13 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.enums.SqlLike;
@@ -63,16 +57,17 @@ public class SysUserController {
 	
 	@ApiOperation(value="用户分页查询")
 	@ApiImplicitParam(name = "username", value= "用户名")
+	@ResponseBody
 	@GetMapping("/getUserPage")
 	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params, Page page){
-		return ResultUtil.getResult(userService.getSysUserPage(params));
+		return new ResultForm(userService.getSysUserPage(params),"查询失败");
 	}
 
 	@ApiOperation(value="根据用户id查询")
 	@ApiImplicitParam(name = "userId", value= "用户id")
 	@GetMapping("/getUserById")
 	public ResultForm<SysUser> getUserById(@RequestParam String userId){
-		return ResultUtil.getResult(userService.getUserById(userId));
+		return new ResultForm(userService.getUserById(userId), "查询失败");
 	}
 	
 	@ApiOperation(value="导入用户信息")
@@ -88,14 +83,14 @@ public class SysUserController {
 	@ApiOperation(value="新增用户")
 	@PostMapping("/userAdd")
 	public String userAdd(SysUser user){
-		ResultUtil.getResult(userService.insert(user), ResultForm.Status.FAILURE, "新增失败");
+		new ResultForm(userService.insert(user), "新增失败");
 		return "redirect:/sys/sysUser/userIndex";
 	}
 	
 	@ApiOperation(value="修改用户")
 	@PostMapping("/userUpdate")
 	public String userUpdate(@RequestBody SysUser user){
-		ResultUtil.getResult(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())), ResultForm.Status.FAILURE, "修改失败");
+		new ResultForm(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())),  "修改失败");
 		return "redirect:/sys/sysUser/userIndex";
 	}
 	

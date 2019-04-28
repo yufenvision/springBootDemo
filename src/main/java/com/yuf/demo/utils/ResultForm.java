@@ -20,7 +20,41 @@ public class ResultForm<T> {
 	 * 返回数据
 	 */
 	private T data;
+
+	public ResultForm() {
+	}
+
+	/**
+	 * boolean类型结果返回，新增/修改失败
+	 * @return:  ResultForm
+	 * @param: flagFromDB db新增修改结果
+	 * @param: msg 失败提示
+	 * @Author: dyf
+	 * @Date: 2019/4/28 14:57
+	*/
+	public ResultForm(boolean flagFromDB, String msg) {
+		if(flagFromDB == false){
+			this.msg = msg;
+			this.setStatus(Status.FAILURE);
+		}
+	}
 	
+	/**
+	 * 对象或列表结果返回
+	 * @return: ResultForm
+	 * @param: data db返回的结果对象或列表
+	 * @param: msg 失败提示
+	 * @Author: dyf 
+	 * @Date: 2019/4/28 15:00
+	*/
+	public ResultForm(T data, String msg) {
+		if(data == null){
+			this.msg = msg;
+			this.setStatus(Status.FAILURE);
+		}
+		this.data = data;
+	}
+
 	/**
 	 * 作为的是状态码和消息的常量
 	 * @author dyf
@@ -45,7 +79,7 @@ public class ResultForm<T> {
 			this.msg = msg;
 		}
 	}
-	
+
 	public void setStatus(Status status){
 		this.status = status.status;
 		this.msg = status.msg;
