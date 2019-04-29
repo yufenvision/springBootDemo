@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Api(tags="测试接口")
 @Slf4j
 @Controller
-@RequestMapping("/page")
+@RequestMapping("/layui")
 public class ControllerTest {
 	
 	
@@ -31,16 +31,9 @@ public class ControllerTest {
 	@Autowired
 	private ISysUserService userService;
 	
-	@RequestMapping("/hello")
+	@RequestMapping("/index")
 	public String hello(ModelMap map){
-		map.put("message", "我用了新的方式");
-		List<SysUser> list = userService.selectList(null);
-		map.put("users", list);
-//		return girlProperties.getCupSize()+"---"+girlProperties.getAge();
-		SysUser sysUser = new SysUser();
-		sysUser.createDefaultInfo();
-		map.put("sysUser", sysUser);
-		return "userAdd";
+		return "/index";
 	}
 	
 	@RequestMapping("/value")
