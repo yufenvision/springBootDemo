@@ -30,9 +30,14 @@ public class ControllerTest {
 	private String value;
 	@Autowired
 	private ISysUserService userService;
-	
+
+	@RequestMapping("/noPage")
+	public String noPage(){
+		return "/noPage";
+	}
+
 	@RequestMapping("/index")
-	public String hello(ModelMap map){
+	public String index(){
 		return "/index";
 	}
 	

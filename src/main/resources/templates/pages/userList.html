@@ -6,39 +6,243 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="@{/layui/css/layui.css}"  media="all">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"  media="all">
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
-
-<table class="layui-hide" id="test"></table>
+<button id="userAdd-btn" class="layui-btn">新增</button>
+<div id="add-main" style="display: none;">
+    <form class="layui-form" id="add-form" action="">
+        <input type="text" name="id" style="display: none">
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" style="width: 100px" >用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required value="" style="width: 240px"  lay-verify="required" placeholder="请输入用户名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required  style="width: 240px" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" required  style="width: 240px" lay-verify="required" placeholder="请输入email" autocomplete="off" class="layui-input">
+                <!-- <input type="hidden" name="id" style="width: 240px" autocomplete="off" class="layui-input"> -->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="save" >立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="closeBtn" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="update-main" style="display: none;">
+    <form class="layui-form" id="update-form"  lay-filter="formVal" action="">
+        <input type="text" name="id" style="display: none">
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" style="width: 100px" >用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required value="" style="width: 240px"  lay-verify="required" placeholder="请输入用户名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required  style="width: 240px" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" required  style="width: 240px" lay-verify="required" placeholder="请输入email" autocomplete="off" class="layui-input">
+                <!-- <input type="hidden" name="id" style="width: 240px" autocomplete="off" class="layui-input"> -->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="update" >修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary" >重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="layui-hide" id="sysUser" lay-filter="sysUser"></table>
 
 
 <script src="/layui/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
-<script>
-    layui.use('table', function(){
-        var table = layui.table;
+<script th:inline="none">
 
-        table.render({
-            elem: '#test'
-            ,url:'/demo/table/user/'
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            $ = layui.jquery,
+            form = layui.form;
+        var tableData = table.render({
+            elem: '#sysUser'
+            ,url:'/sys/sysUser/getUserPage'
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.status == 200 ? 0 : res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,cols: [[
-                {field:'id', width:80, title: 'ID', sort: true}
-                ,{field:'username', width:80, title: '用户名'}
-                ,{field:'sex', width:80, title: '性别', sort: true}
-                ,{field:'city', width:80, title: '城市'}
-                ,{field:'sign', title: '签名', width: '30%', minWidth: 100} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                ,{field:'experience', title: '积分', sort: true}
-                ,{field:'score', title: '评分', sort: true}
-                ,{field:'classify', title: '职业'}
-                ,{field:'wealth', width:137, title: '财富', sort: true}
+                {field:'increment', title: '序号',templet:'#increment'}
+                ,{field:'id', title: 'ID', sort: true, hide: true}
+                ,{field:'username', title: '用户名'}
+                ,{field:'password',title: '密码', sort: true}
+                ,{field:'email', title: '邮箱'}
+                ,{field:'mobilePhone', title: '电话号码'}
+                ,{field:'roleId', title: '角色', sort: true}
+                ,{field:'departId', title: '部门', sort: true}
+                ,{fixed: 'right', align:'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
+            ,page: true //开启分页
+        });
+
+        table.on('tool(sysUser)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if(layEvent === 'detail'){ //查看
+                layer
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('确认删除？', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    $.get('/sys/sysUser/userDel?id=' + obj.data.id,function(data){
+                        if(data.status == 200){
+                            layer.msg('删除成功');
+                        }
+                    })
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                //do something
+                layer.open({
+                    //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                    type: 1,
+                    title:"修改用户",
+                    closeBtn: false,
+                    shift: 2,
+                    area: ['400px', '300px'],
+                    shadeClose: true,
+                    // btn: ['新增', '取消'],
+                    // btnAlign: 'c',
+                    content: $("#update-main"),
+                    success: function(layero, index){},
+                    yes:function(){
+
+                    }
+                });
+                form.val("formVal", {
+                    "id": data.id
+                    ,"username": data.username // "name": "value"
+                    ,"password": data.password
+                    ,"email": data.email
+                    ,"mobilePhone": data.mobilePhone
+                    ,"roleId": data.roleId
+                    ,"departId": data.departId
+                })
+                //同步更新缓存对应的值
+//                obj.update({
+//                    username: '123'
+//                    ,title: 'xxx'
+//                });
+            }
+        });
+
+        $("#userAdd-btn").click(function(){
+            layer.open({
+                //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                type: 1,
+                title:"新增用户",
+                closeBtn: false,
+                shift: 2,
+                area: ['400px', '300px'],
+                shadeClose: true,
+                // btn: ['新增', '取消'],
+                // btnAlign: 'c',
+                content: $("#add-main"),
+                success: function(layero, index){},
+                yes:function(){
+
+                }
+            });
+        })
+        form.on('submit(save)', function(data){
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            layer.closeAll();
+            $.ajax({
+                url: '/sys/sysUser/userAdd',
+                method: 'post',
+                data: JSON.stringify(data.field),
+                dataType: 'JSON',
+                contentType: "application/json",
+                success: function(res){
+                    if(res.status = 200){
+                        layer.msg('新增成功')
+                    }
+                    table.reload('sysUser',{
+                        where: { //设定异步数据接口的额外参数，任意设
+                        }
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    })
+                }
+            })
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(update)', function(data){
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            layer.closeAll();
+            $.ajax({
+                url: '/sys/sysUser/userUpdate',
+                method: 'post',
+                data: JSON.stringify(data.field),
+                dataType: 'JSON',
+                contentType: "application/json",
+                success: function(res){
+                    if(res.status = 200){
+                        layer.msg('修改成功')
+                    }
+                    table.reload('sysUser',{
+                        where: { //设定异步数据接口的额外参数，任意设
+                        }
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    })
+                }
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
 </script>
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+<script type="text/html" id="increment">
+    {{d.LAY_TABLE_INDEX+1}}
+</script>
 </body>
 </html>

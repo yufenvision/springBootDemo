@@ -43,15 +43,10 @@ public class SysUserController {
 	private String storagePath;
 	@Autowired
 	private ISysUserService userService;
-	
+
 	@RequestMapping("/userIndex")
 	public String index(ModelMap map){
-		map.put("message", "用户模块首页");
-		SysUser sysUser = new SysUser();
-		sysUser.createDefaultInfo();
-		map.put("sysUser", sysUser);
-		map.put("users", userService.getSysUserPage(new HashMap()));
-		return "bootstrap/index";
+		return "userList";
 	}
 	
 	
@@ -81,26 +76,26 @@ public class SysUserController {
 	}
 	
 	@ApiOperation(value="新增用户")
+	@ResponseBody
 	@PostMapping("/userAdd")
-	public String userAdd(SysUser user){
+	public ResultForm<SysUser> userAdd(@RequestBody SysUser user){
 		user.createDefaultInfo();
-		new ResultForm(userService.insert(user), "新增失败");
-		return "redirect:/sys/sysUser/userIndex";
+		return new ResultForm(userService.insert(user), "新增失败");
 	}
 
 	@ApiOperation(value="修改用户")
+	@ResponseBody
 	@PostMapping("/userUpdate")
-	public String userUpdate(@RequestBody SysUser user){
-		new ResultForm(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())),  "修改失败");
-		return "redirect:/sys/sysUser/userIndex";
+	public ResultForm<SysUser> userUpdate(@RequestBody SysUser user){
+		return new ResultForm(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())),  "修改失败");
 	}
 	
 	//逻辑删除
 	@ApiOperation(value="删除用户")
 	@ApiImplicitParam(name = "用户id", value ="id")
+	@ResponseBody
 	@GetMapping("/userDel")
-	public String userDel(String id){
-		new ResultForm(userService.deleteById(id), "删除失败");
-		return "redirect:/sys/sysUser/userIndex";
+	public ResultForm userDel(String id){
+		return new ResultForm(userService.deleteById(id), "删除失败");
 	}
 }
