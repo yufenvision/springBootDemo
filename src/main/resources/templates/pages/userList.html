@@ -115,7 +115,7 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if(layEvent === 'detail'){ //查看
-                layer
+                layer.msg(data.id)
             } else if(layEvent === 'del'){ //删除
                 layer.confirm('确认删除？', function(index){
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存

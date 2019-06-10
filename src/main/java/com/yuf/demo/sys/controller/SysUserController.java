@@ -34,8 +34,7 @@ import javassist.runtime.Desc;
  * @since 2018-11-02
  */
 @Api(tags="用户管理接口")
-//@RestController
-@Controller
+@RestController
 @RequestMapping("/sys/sysUser" )
 public class SysUserController {
 	
@@ -44,15 +43,8 @@ public class SysUserController {
 	@Autowired
 	private ISysUserService userService;
 
-	@RequestMapping("/userIndex")
-	public String index(ModelMap map){
-		return "userList";
-	}
-	
-	
 	@ApiOperation(value="用户分页查询")
 	@ApiImplicitParam(name = "username", value= "用户名")
-	@ResponseBody
 	@GetMapping("/getUserPage")
 	public ResultForm<List<SysUser>> getUserPage(@RequestParam Map params, Page page){
 		return new ResultForm(userService.getSysUserPage(params),"查询失败");
@@ -76,7 +68,6 @@ public class SysUserController {
 	}
 	
 	@ApiOperation(value="新增用户")
-	@ResponseBody
 	@PostMapping("/userAdd")
 	public ResultForm<SysUser> userAdd(@RequestBody SysUser user){
 		user.createDefaultInfo();
@@ -84,7 +75,6 @@ public class SysUserController {
 	}
 
 	@ApiOperation(value="修改用户")
-	@ResponseBody
 	@PostMapping("/userUpdate")
 	public ResultForm<SysUser> userUpdate(@RequestBody SysUser user){
 		return new ResultForm(userService.update(user, new EntityWrapper<SysUser>().eq("id", user.getId())),  "修改失败");
@@ -93,7 +83,6 @@ public class SysUserController {
 	//逻辑删除
 	@ApiOperation(value="删除用户")
 	@ApiImplicitParam(name = "用户id", value ="id")
-	@ResponseBody
 	@GetMapping("/userDel")
 	public ResultForm userDel(String id){
 		return new ResultForm(userService.deleteById(id), "删除失败");
