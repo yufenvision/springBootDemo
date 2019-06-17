@@ -1,13 +1,7 @@
 package com.yuf.demo.business.filecenter.controller;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -321,5 +315,54 @@ public class FileInfoController {
 		ResultForm result = new ResultForm();
 		result.setData(fileInfoService.deleteFileNotInDisk());
 		return result;
+	}
+
+	@ApiOperation(value="获取图片文件url")
+	@GetMapping("/getPicFromUrl")
+	public byte[] getPicFromUrl(){
+		URL url = null;
+		byte[] data = null;
+		try {
+			url = new URL("http://120.202.98.222:9003/yuxing/61619820/2019/06/61619820_1_20190616170200.jpg");
+			URLConnection connection = url.openConnection();
+			InputStream inStream = connection.getInputStream();
+			data = readInputStream(inStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+
+	public static void main(String[] args) throws Exception {
+		URL url = new URL("http://120.202.98.222:9003/yuxing/61619820/2019/06/61619820_1_20190616170200.jpg");
+		URLConnection connection = url.openConnection();
+		InputStream inStream = connection.getInputStream();
+		byte[] data = readInputStream(inStream);
+
+		File imageFile = new File("D:/BeautyGirl.jpg");
+		// 创建输出流
+		FileOutputStream outStream = new FileOutputStream(imageFile);
+		// 写入数据
+		outStream.write(data);
+		// 关闭输出流
+		outStream.close();
+		System.out.println("完成！");
+	}
+
+	public static byte[] readInputStream(InputStream inStream) throws Exception {
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+		// 创建一个Buffer字符串
+		byte[] buffer = new byte[1024];
+		// 每次读取的字符串长度，如果为-1，代表全部读取完毕
+		int len = 0;
+		// 使用一个输入流从buffer里把数据读取出来
+		while ((len = inStream.read(buffer)) != -1) {
+			// 用输出流往buffer里写入数据，中间参数代表从哪个位置开始读，len代表读取的长度
+			outStream.write(buffer, 0, len);
+		}
+		// 关闭输入流
+		inStream.close();
+		// 把outStream里的数据写入内存
+		return outStream.toByteArray();
 	}
 }
