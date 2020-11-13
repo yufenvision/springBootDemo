@@ -16,8 +16,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 * @version 创建时间：2019年1月26日 下午4:42:24
 * 类说明
 */
-@Configuration
-@EnableSwagger2
+//@Configuration
+//@EnableSwagger2
 public class SwaggerConfig {
 	
 	@Bean(value = "系统管理")

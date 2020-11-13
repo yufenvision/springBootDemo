@@ -20,25 +20,25 @@ public interface FileInfoMapper extends BaseMapper<FileInfo> {
 	/**
 	 * 根据查询条件获取分页文件列表
 	 * @param params
-	 * @param page 
+	 * @param page
 	 * @return
 	 */
 //	List<FileInfo> getFileByParams(Map params, BasePage page);
-	
-	
+
+
 	/**
 	 * 获取没有和中间表关联的无效文件id列表
 	 * @return
 	 */
 	List<String> getUselessIds();
-	
+
 	/**
 	 * 根据原始文件名获取fullPath
 	 * @param id
 	 * @return
 	 */
 	List<String> getFullPath(String originalName);
-	
+
 	/**
 	 * 根据文件全路径名删除文件
 	 * @param pathList

@@ -18,5 +18,8 @@
         <sql id="Base_Column_List">
             id, file_name, original_name, busi_type, file_size, full_path, upload_time, business_id
         </sql>
+    <delete id="delFileByFullPath"></delete>
+    <select id="getUselessIds" resultType="java.lang.String"></select>
+    <select id="getFullPath" resultType="java.lang.String"></select>
 
 </mapper>

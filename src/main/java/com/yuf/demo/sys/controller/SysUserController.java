@@ -18,7 +18,6 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.yuf.demo.sys.entity.SysUser;
 import com.yuf.demo.sys.service.ISysUserService;
 import com.yuf.demo.utils.ResultForm;
-import com.yuf.demo.utils.ResultUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
