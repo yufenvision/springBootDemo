@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebListener;
 import java.io.IOException;
 
 /**
@@ -12,7 +14,6 @@ import java.io.IOException;
  * @Date: 2020/11/13 16:57
  */
 @Slf4j
-@Component
 public class MyFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
