@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuf.demo.sys.exception.GirlException;
-import com.yuf.demo.utils.ResultForm;
+import com.yuf.demo.utils.Response;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 */
 @Slf4j
 @ControllerAdvice
-public class ExceptionHandle {
+public class GlobalExceptionHandle {
 	
 //	@ExceptionHandler(value = Exception.class)
 //	@ResponseBody
@@ -30,15 +30,15 @@ public class ExceptionHandle {
 	
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
-	public ResultForm handle(Exception e){
-		ResultForm result = new ResultForm();
+	public Response handle(Exception e){
+		Response result = new Response();
 		if(e instanceof GirlException){
 			GirlException girlException = (GirlException) e;
 			result.setStatus(girlException.getCode());
 			result.setMsg(girlException.getMessage());
 			return result;
 		}else{
-			result.setStatus(ResultForm.Status.ERROR);
+			result.setStatus(Response.Status.ERROR);
 			log.error(result.getMsg(),e);
 		}
 		log.info(result.getMsg());

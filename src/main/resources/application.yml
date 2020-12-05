@@ -1,7 +1,7 @@
 #开发环境
 spring:
-  profiles:
-    active: dev
+    profiles:
+        active: dev
 #生产环境
 #@spring.profiles.active=pro
 # 设置暴露所有端点

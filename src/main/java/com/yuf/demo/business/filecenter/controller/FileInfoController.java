@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yuf.demo.business.filecenter.entity.FileInfo;
 import com.yuf.demo.business.filecenter.mapper.FileInfoMapper;
 import com.yuf.demo.business.filecenter.service.IFileInfoService;
-import com.yuf.demo.utils.ResultForm;
+import com.yuf.demo.utils.Response;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -60,10 +60,10 @@ public class FileInfoController {
 	})
 //	@RequiresPermissions("fileInfo:upload")
 	@RequestMapping(value = "/upload", method = { RequestMethod.POST })
-	public ResultForm<List<FileInfo>> upload(@RequestParam("files") MultipartFile[] files,@RequestParam String busiType){
+	public Response<List<FileInfo>> upload(@RequestParam("files") MultipartFile[] files, @RequestParam String busiType){
 		logger.info("files count = " + files.length);
 		
-		ResultForm<List<FileInfo>> result = new ResultForm<>();
+		Response<List<FileInfo>> result = new Response<>();
 		List<FileInfo> fileInfos = new ArrayList<FileInfo>();
 		for(MultipartFile  multiFile : files){
 			try {
@@ -76,7 +76,7 @@ public class FileInfoController {
 		}	
 		result.setData(fileInfos);
 		if(fileInfos.isEmpty()){
-			result.setStatus(ResultForm.Status.ERROR);
+			result.setStatus(Response.Status.ERROR);
 		}
 		return result;	
 	}
@@ -88,14 +88,14 @@ public class FileInfoController {
 		@ApiImplicitParam(name="file",value="上传单个文件"),
 		@ApiImplicitParam(name="busiType",value="业务类型(0-一河一策，1-通知公告，2-工作汇报，3-公示牌,4-问题图片,5-问题视频,6-问题记录图片,7-问题记录视频,8-排污口,9-企业图片,10-投诉建议图片,11-投诉建议视频,12-投诉建议处理图片,13-摄像头,14-无人机,15-水质监测,16-一河一档")
 	})
-	public ResultForm<FileInfo> uploadOne(@RequestParam MultipartFile file,@RequestParam String busiType){
-		ResultForm<FileInfo> result = new ResultForm<>();
+	public Response<FileInfo> uploadOne(@RequestParam MultipartFile file, @RequestParam String busiType){
+		Response<FileInfo> result = new Response<>();
 		try {
 			FileInfo fileInfo = fileInfoService.saveFile2Disk(file,busiType);
 			fileInfoService.saveFile(fileInfo);	
 			result.setData(fileInfo);
 		}catch (Exception e) {
-			result.setStatus(ResultForm.Status.FAILURE);
+			result.setStatus(Response.Status.FAILURE);
 			logger.error("save file failed ! busiType = " + busiType, e);
 		} 
 		return result;
@@ -107,8 +107,8 @@ public class FileInfoController {
 //	@RequiresPermissions("fileInfo:delete")
 	@RequestMapping(value = "/delete",method = { RequestMethod.DELETE })
 //	public ResultForm delete(@RequestBody List<String> ids,@RequestParam String timestamp,@RequestParam String signature){
-	public ResultForm<List<String>> delete(@RequestBody List<String> ids){
-		ResultForm<List<String>> result = new ResultForm<>();
+	public Response<List<String>> delete(@RequestBody List<String> ids){
+		Response<List<String>> result = new Response<>();
 //		if(!verification(fileId,timestamp,signature)){
 //			result.setFailForm(Status.VERIFY_FAIL,"验签失败");
 //			return result;
@@ -279,7 +279,7 @@ public class FileInfoController {
 	@ApiOperation(value="删除-未关联业务中间表的文件")
 	@ApiImplicitParam(name = "isForceDel", value= "是否强制删除（本地不存在该文件也删除）")
 	@GetMapping("/cleanUselessFile")
-	public ResultForm cleanUselessFile(@RequestParam(defaultValue = "false") Boolean isForceDel){
+	public Response cleanUselessFile(@RequestParam(defaultValue = "false") Boolean isForceDel){
 		List<String> delIds = fileInfoMapper.getUselessIds();
 		if(isForceDel != true || isForceDel == null){
 			return delete(delIds);
@@ -288,7 +288,7 @@ public class FileInfoController {
 		for (String fileId : delIds) {
 			if(fileInfoService.deleteFileByFileIdForce(fileId))num++;
 		}
-		ResultForm result = new ResultForm();
+		Response result = new Response();
 		result.setMsg("强制删除成功"+num+"条");
 		return result;
 	}
@@ -299,8 +299,8 @@ public class FileInfoController {
 	 */
 	@ApiOperation(value="删除-库中没有但本地有的文件")
 	@DeleteMapping("/cleanFileNotInDB")
-	public ResultForm cleanFileNotInDB(){
-		ResultForm result = new ResultForm();
+	public Response cleanFileNotInDB(){
+		Response result = new Response();
 		result.setData(fileInfoService.deleteFileNotInDB());
 		return result;
 	}
@@ -311,8 +311,8 @@ public class FileInfoController {
 	 */
 	@ApiOperation(value="删除-库中有但本地没有的文件")
 	@DeleteMapping("/cleanFileNotInDisk")
-	public ResultForm cleanFileNotInDisk(){
-		ResultForm result = new ResultForm();
+	public Response cleanFileNotInDisk(){
+		Response result = new Response();
 		result.setData(fileInfoService.deleteFileNotInDisk());
 		return result;
 	}

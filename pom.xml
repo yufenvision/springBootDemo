@@ -8,7 +8,7 @@
   	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.4.RELEASE</version>
+		<version>2.1.9.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
@@ -95,6 +95,31 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+
+		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+
+		<!-- httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.6</version>
+		</dependency>
+
 		<!-- easypoi -->
 		 <dependency>
             <groupId>cn.afterturn</groupId>
@@ -111,12 +136,8 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>3.2.0</version>
         </dependency>
-        <!-- httpclient for IM网易云信-->
-		<dependency>
-  			<groupId>org.apache.httpcomponents</groupId>
-  			<artifactId>httpclient</artifactId>
-  			<version>4.5.6</version>
-		</dependency>
+
+
 		<!-- 工作流引擎 -->
 <!--		<dependency>-->
 <!--            <groupId>org.activiti</groupId>-->

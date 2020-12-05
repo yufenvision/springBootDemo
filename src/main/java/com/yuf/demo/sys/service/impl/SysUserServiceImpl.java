@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.yuf.demo.sys.entity.SysUser;
 import com.yuf.demo.sys.mapper.SysUserMapper;
 import com.yuf.demo.sys.service.ISysUserService;
-import com.yuf.demo.utils.ResultForm;
 
 /**
  * <p>
