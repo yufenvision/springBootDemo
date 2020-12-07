@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @Author: dyf
@@ -19,31 +22,55 @@ import java.util.concurrent.Callable;
 @RequestMapping("/async")
 public class AsyncController {
     @Autowired
-    AsyncMethodClass asyncMethodClass;
+    AsyncMethodService asyncMethodService;
 
-
-    @GetMapping("/test")
-    public String test() throws InterruptedException {
+    @GetMapping("/noReturn")
+    public String test3Async() throws InterruptedException {
         log.info("主线程开始=====>"+ Thread.currentThread().getName());
-        Thread.sleep(10000);
+        asyncMethodService.asyncNoReturn();
         log.info("主线程结束=====>"+ Thread.currentThread().getName());
-        return "success";
+        return "test3Async-success";
+    }
+
+    @GetMapping("/hasReturn")
+    public List<User> get() throws Exception {
+        // Start the clock
+        long start = System.currentTimeMillis();
+
+        // Kick of multiple, asynchronous lookups
+        CompletableFuture<User> page1 = asyncMethodService.findUser("PivotalSoftware");
+        CompletableFuture<User> page2 = asyncMethodService.findUser("CloudFoundry");
+        CompletableFuture<User> page3 = asyncMethodService.findUser("Spring-Projects");
+
+        // Wait until they are all done
+        CompletableFuture.allOf(page1,page2,page3).join();
+
+        // Print results, including elapsed time
+        log.info("耗时：{} 毫秒 ", (System.currentTimeMillis() - start));
+        log.info("--> {}", page1.get());
+        log.info("--> {}", page2.get());
+        log.info("--> {}", page3.get());
+        List<User> users = new ArrayList<>();
+        users.add(page1.get());
+        users.add(page2.get());
+        users.add(page3.get());
+        return users;
     }
 
 
 
-    @GetMapping("/testAsync")
-    public Callable<String> testAsync() throws InterruptedException {
-        log.info("主线程开始=====>"+ Thread.currentThread().getName());
-        Callable<String> callable = () -> {
-            log.info("异步线程开始=====>" + Thread.currentThread().getName());
-            Thread.sleep(10000);
-            log.info("异步线程结束=====>" + Thread.currentThread().getName());
-            return "异步callable返回:success";
-        };
-        log.info("主线程结束=====>"+ Thread.currentThread().getName());
-        return callable;
-    }
+//    @GetMapping("/testAsync")
+//    public Callable<String> testAsync() throws InterruptedException {
+//        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+//        Callable<String> callable = () -> {
+//            log.info("异步线程开始=====>" + Thread.currentThread().getName());
+//            Thread.sleep(10000);
+//            log.info("异步线程结束=====>" + Thread.currentThread().getName());
+//            return "异步callable返回:success";
+//        };
+//        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+//        return callable;
+//    }
 
     @GetMapping("/test2Async")//因为异步方法在同一个类中失效
     public String test2Async() throws InterruptedException {
@@ -53,13 +80,6 @@ public class AsyncController {
         return "test2Async-success";
     }
 
-    @GetMapping("/test3Async")
-    public String test3Async() throws InterruptedException {
-        log.info("主线程开始=====>"+ Thread.currentThread().getName());
-        asyncMethodClass.asyncReturn();
-        log.info("主线程结束=====>"+ Thread.currentThread().getName());
-        return "test3Async-success";
-    }
 
     /*
     什么情况下会导致@Async异步方法会失效？
