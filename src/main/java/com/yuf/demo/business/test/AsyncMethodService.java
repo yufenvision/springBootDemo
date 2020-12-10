@@ -1,17 +1,14 @@
 package com.yuf.demo.business.test;
 
+import com.yuf.demo.config.theadpool.AsyncThreadPoolConfig;
+import com.yuf.demo.config.theadpool.SimpleThreadPoolConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 /**
  * @Author: dyf
@@ -27,14 +24,14 @@ public class AsyncMethodService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    @Async
+    @Async(AsyncThreadPoolConfig.EXECUTOR_NAME)
     public void asyncNoReturn() throws InterruptedException {
         log.info("异步线程开始=====>" + Thread.currentThread().getName());
         Thread.sleep(10000);
         log.info("异步线程结束=====>" + Thread.currentThread().getName());
     }
 
-    @Async
+    @Async(AsyncThreadPoolConfig.EXECUTOR_NAME)
     public CompletableFuture<User> findUser(String userName) throws InterruptedException {
         log.info("{}:Looking up {}", Thread.currentThread().getName(), userName);
         String url = String.format("https://api.github.com/users/%s", userName);

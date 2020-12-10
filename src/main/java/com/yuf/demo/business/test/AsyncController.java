@@ -36,13 +36,14 @@ public class AsyncController {
     public List<User> get() throws Exception {
         // Start the clock
         long start = System.currentTimeMillis();
+        List<User> users = new ArrayList<>();
 
         // Kick of multiple, asynchronous lookups
         CompletableFuture<User> page1 = asyncMethodService.findUser("PivotalSoftware");
         CompletableFuture<User> page2 = asyncMethodService.findUser("CloudFoundry");
         CompletableFuture<User> page3 = asyncMethodService.findUser("Spring-Projects");
 
-        // Wait until they are all done
+        // 同步阻塞，Wait until they are all done
         CompletableFuture.allOf(page1,page2,page3).join();
 
         // Print results, including elapsed time
@@ -50,7 +51,6 @@ public class AsyncController {
         log.info("--> {}", page1.get());
         log.info("--> {}", page2.get());
         log.info("--> {}", page3.get());
-        List<User> users = new ArrayList<>();
         users.add(page1.get());
         users.add(page2.get());
         users.add(page3.get());

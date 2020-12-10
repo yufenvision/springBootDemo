@@ -23,6 +23,7 @@ public class ApplyExcelDTO implements Serializable, IExcelModel {
     private String name;
 
     @Pattern(regexp = "[0-9]{11}", message = "电话号码必须为11位，且均为数字")
+    @NotNull(message = "电话号码不能为空")
     @Excel(name = "电话号码")
     private String phone;
 
@@ -31,6 +32,7 @@ public class ApplyExcelDTO implements Serializable, IExcelModel {
     private String faceUrl;
 
     @Pattern(regexp = ".{15}|.{18}", message = "身份证号码必须为15位或18位")
+    @NotNull(message = "身份证号不能为空")
     @Excel(name = "身份证号")
     private String idCard;
 
@@ -67,6 +69,7 @@ public class ApplyExcelDTO implements Serializable, IExcelModel {
     @Excel(name = "返回失败备注")
     private String errorMsg;
 
+    private String photo;
 
     @Override
     public String getErrorMsg() {
