@@ -1,4 +1,4 @@
-package com.yuf.demo.business.test;
+package com.yuf.demo.business.async_test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -26,6 +25,7 @@ public class AsyncController {
 
     @GetMapping("/noReturn")
     public String test3Async() throws InterruptedException {
+        log.info("调用类servcie为：{}", asyncMethodService.getClass().getName());
         log.info("主线程开始=====>"+ Thread.currentThread().getName());
         asyncMethodService.asyncNoReturn();
         log.info("主线程结束=====>"+ Thread.currentThread().getName());
@@ -72,10 +72,19 @@ public class AsyncController {
 //        return callable;
 //    }
 
-    @GetMapping("/test2Async")//因为异步方法在同一个类中失效
-    public String test2Async() throws InterruptedException {
+    @GetMapping("/sameClass")//因为异步方法在同一个类中失效
+    public String sameClass() throws InterruptedException {
         log.info("主线程开始=====>"+ Thread.currentThread().getName());
         backStr();
+        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+        return "test2Async-success";
+    }
+
+    @GetMapping("/wrapperMethod")//包装方法
+    public String wrapperMethod() throws InterruptedException {
+        log.info("调用类servcie为：{}", asyncMethodService.getClass().getName());
+        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+        asyncMethodService.wrapperMethod();
         log.info("主线程结束=====>"+ Thread.currentThread().getName());
         return "test2Async-success";
     }

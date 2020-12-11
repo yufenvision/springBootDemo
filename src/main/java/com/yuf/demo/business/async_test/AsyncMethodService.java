@@ -1,7 +1,6 @@
-package com.yuf.demo.business.test;
+package com.yuf.demo.business.async_test;
 
 import com.yuf.demo.config.theadpool.AsyncThreadPoolConfig;
-import com.yuf.demo.config.theadpool.SimpleThreadPoolConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Async;
@@ -42,5 +41,8 @@ public class AsyncMethodService {
 
     }
 
+    public void wrapperMethod(){
+
+    }
 
 }
