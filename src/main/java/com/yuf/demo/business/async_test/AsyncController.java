@@ -7,9 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author: dyf
@@ -57,20 +66,68 @@ public class AsyncController {
         return users;
     }
 
+    @GetMapping("/servlet")
+    public void servlet(HttpServletRequest request, HttpServletResponse response){
+        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+        AsyncContext asyncContext = request.startAsync();
+        //设置监听器:可设置其开始、完成、异常、超时等事件的回调处理
+        asyncContext.addListener(new AsyncListener() {
+            @Override
+            public void onTimeout(AsyncEvent event) throws IOException {
+                System.out.println("超时了...");
+                //做一些超时后的相关操作...
+            }
+            @Override
+            public void onStartAsync(AsyncEvent event) throws IOException {
+                System.out.println("线程开始");
+            }
+            @Override
+            public void onError(AsyncEvent event) throws IOException {
+                System.out.println("发生错误："+event.getThrowable());
+            }
+            @Override
+            public void onComplete(AsyncEvent event) throws IOException {
+                System.out.println("执行完成");
+                //这里可以做一些清理资源的操作...
+            }
+        });
+        //设置超时时间
+        asyncContext.setTimeout(20000);
+        asyncContext.start(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000);
+                    System.out.println("内部线程：" + Thread.currentThread().getName());
+                    asyncContext.getResponse().setCharacterEncoding("utf-8");
+                    asyncContext.getResponse().setContentType("text/html;charset=UTF-8");
+                    asyncContext.getResponse().getWriter().println("这是异步的请求返回");
+                } catch (Exception e) {
+                    System.out.println("异常："+e);
+                }
+                //异步请求完成通知
+                //此时整个请求才完成
+                asyncContext.complete();
+            }
+        });
+        //此时之类 request的线程连接已经释放了
+        System.out.println("主线程：" + Thread.currentThread().getName());
+        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+    }
 
 
-//    @GetMapping("/testAsync")
-//    public Callable<String> testAsync() throws InterruptedException {
-//        log.info("主线程开始=====>"+ Thread.currentThread().getName());
-//        Callable<String> callable = () -> {
-//            log.info("异步线程开始=====>" + Thread.currentThread().getName());
-//            Thread.sleep(10000);
-//            log.info("异步线程结束=====>" + Thread.currentThread().getName());
-//            return "异步callable返回:success";
-//        };
-//        log.info("主线程结束=====>"+ Thread.currentThread().getName());
-//        return callable;
-//    }
+    @GetMapping("/callable")
+    public Callable<String> callable() throws InterruptedException {
+        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+        Callable<String> callable = () -> {
+            log.info("异步线程开始=====>" + Thread.currentThread().getName());
+            Thread.sleep(10000);
+            log.info("异步线程结束=====>" + Thread.currentThread().getName());
+            return "异步callable返回:success";
+        };
+        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+        return callable;
+    }
 
     @GetMapping("/sameClass")//因为异步方法在同一个类中失效
     public String sameClass() throws InterruptedException {
@@ -82,9 +139,36 @@ public class AsyncController {
 
     @GetMapping("/wrapperMethod")//包装方法
     public String wrapperMethod() throws InterruptedException {
-        log.info("调用类servcie为：{}", asyncMethodService.getClass().getName());
         log.info("主线程开始=====>"+ Thread.currentThread().getName());
-        asyncMethodService.wrapperMethod();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        CompletableFuture<Long> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                return asyncMethodService.wrapperMethod();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0L;
+        }, executorService);
+        CompletableFuture<Long> future1 = CompletableFuture.supplyAsync(() -> {
+            try {
+                return asyncMethodService.wrapperMethod();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0L;
+        }, executorService);
+        CompletableFuture<Long> future2 = CompletableFuture.supplyAsync(() -> {
+            try {
+                return asyncMethodService.wrapperMethod();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0L;
+        }, executorService);
+        future1.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+        future2.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+        future.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+
         log.info("主线程结束=====>"+ Thread.currentThread().getName());
         return "test2Async-success";
     }

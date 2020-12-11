@@ -1,4 +1,4 @@
-package com.yuf.demo.business.test;
+package com.yuf.demo.business.async_test;
 
 import com.alibaba.fastjson.JSON;
 import com.yuf.demo.utils.Response;
