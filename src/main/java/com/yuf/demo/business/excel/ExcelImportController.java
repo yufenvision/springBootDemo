@@ -1,5 +1,6 @@
 package com.yuf.demo.business.excel;
 
+import com.yuf.demo.business.excel.service.ApplyExcellmportService;
 import com.yuf.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +19,21 @@ import org.springframework.web.multipart.MultipartFile;
 public class ExcelImportController {
     @Autowired
     ExcelImportService excelImportService;
+    @Autowired
+    ApplyExcellmportService applyExcellmportService;
+
 
     @PostMapping("/file")
     public Response importExcel(@RequestParam("file") MultipartFile file){
 
+
         return excelImportService.importApplyInfo(file);
+    }
+
+    @PostMapping("/fileCheck")
+    public Response importExcelCheck(@RequestParam("file") MultipartFile file){
+
+        return applyExcellmportService.importExcelData(file);
     }
 
 

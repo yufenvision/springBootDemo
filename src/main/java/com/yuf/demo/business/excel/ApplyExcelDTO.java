@@ -1,6 +1,7 @@
 package com.yuf.demo.business.excel;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -14,9 +15,13 @@ import java.io.Serializable;
  * @Date: 2020/12/9 17:38
  */
 @Data
-public class ApplyExcelDTO implements Serializable, IExcelModel {
+public class ApplyExcelDTO implements Serializable, IExcelModel, IExcelDataModel {
 
     private Long id;
+
+    @NotNull(message = "导入id不能为空")
+    @Excel(name = "id")
+    private String importId;
 
     @NotNull(message = "姓名不能为空")
     @Excel(name = "姓名")
@@ -71,6 +76,8 @@ public class ApplyExcelDTO implements Serializable, IExcelModel {
 
     private String photo;
 
+    private String placeCode;
+
     @Override
     public String getErrorMsg() {
         return this.errorMsg;
@@ -79,5 +86,18 @@ public class ApplyExcelDTO implements Serializable, IExcelModel {
     @Override
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+
+    //错误行号
+    private Integer rowNum;
+    @Override
+    public int getRowNum() {
+        return rowNum;
+    }
+
+    @Override
+    public void setRowNum(int rowNum) {
+        this.rowNum = rowNum;
     }
 }

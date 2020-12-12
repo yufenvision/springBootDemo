@@ -15,13 +15,13 @@ import java.util.concurrent.TimeUnit;
  * @Description:
  */
 //@Configuration
-public class SimpleThreadPoolConfig {
+public class ThreadPoolConfig {
 
     public static final String EXECUTOR_NAME = "executor";
     private static final int CORE_POOL_SIZE = 5;//核⼼线程数为 5。
     private static final int MAX_POOL_SIZE = 10;//最⼤线程数 10
     private static final int QUEUE_CAPACITY = 100;
-    private static final long KEEP_ALIVE_TIME = 1L;//等待时间为 1L
+    private static final long KEEP_ALIVE_TIME = 1L;//等待时间为 1秒
 
     @Bean
     public Executor executor() {

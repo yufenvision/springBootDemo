@@ -34,8 +34,7 @@ public class ApplyInfoVerifyHander implements IExcelVerifyHandler<ApplyExcelDTO>
         Long start = System.currentTimeMillis();
         ExcelVerifyHandlerResult result = new ExcelVerifyHandlerResult();
 
-        String placeCode = "placeCode";
-        if(StringUtils.isBlank(placeCode)){
+        if(StringUtils.isBlank(applyExcel.getPlaceCode())){
             result.setMsg("该省厅小区还未在运营平台创建关联");
             result.setSuccess(false);
             return result;

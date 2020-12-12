@@ -32,6 +32,8 @@ public class AsyncController {
     @Autowired
     AsyncMethodService asyncMethodService;
 
+
+
     @GetMapping("/noReturn")
     public String test3Async() throws InterruptedException {
         log.info("调用类servcie为：{}", asyncMethodService.getClass().getName());
@@ -64,6 +66,64 @@ public class AsyncController {
         users.add(page2.get());
         users.add(page3.get());
         return users;
+    }
+
+    //利用CompletableFuture异步
+    @GetMapping("/future")//包装方法
+    public String future() throws InterruptedException {
+        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+        //后面如果加上.join()会阻塞主线程，保证当前线程执行完以后再执行后面代码
+        task1().thenCombine(task1(),(r1,r2) -> r1 + "+" + r2).thenAccept(res -> System.out.println(res));
+
+        task1().thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+        task1().thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+
+        task2(executorService).thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+        task2(executorService).thenAccept(e -> log.info("总耗时：{} 毫秒", e));
+
+        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+        return "test2Async-success";
+    }
+
+    //利用CompletableFuture异步
+    @GetMapping("/future2")//包装方法
+    public String future2() throws InterruptedException {
+        log.info("主线程开始=====>"+ Thread.currentThread().getName());
+
+        List<CompletableFuture<Long>> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            list.add(task1());
+        }
+//        list.forEach(v -> v.thenAccept(t -> log.info("总耗时：{} 毫秒", t)));
+
+
+        log.info("主线程结束=====>"+ Thread.currentThread().getName());
+        return "test2Async-success";
+    }
+
+    //不指定默认用ForkJoinPool线程池
+    private CompletableFuture<Long> task1(){
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return asyncMethodService.wrapperMethod();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0L;
+        });
+    }
+    //指定线程池
+    private CompletableFuture<Long> task2(ExecutorService pool){
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return asyncMethodService.wrapperMethod();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0L;
+        },pool);
     }
 
     @GetMapping("/servlet")
@@ -137,41 +197,6 @@ public class AsyncController {
         return "test2Async-success";
     }
 
-    @GetMapping("/wrapperMethod")//包装方法
-    public String wrapperMethod() throws InterruptedException {
-        log.info("主线程开始=====>"+ Thread.currentThread().getName());
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        CompletableFuture<Long> future = CompletableFuture.supplyAsync(() -> {
-            try {
-                return asyncMethodService.wrapperMethod();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return 0L;
-        }, executorService);
-        CompletableFuture<Long> future1 = CompletableFuture.supplyAsync(() -> {
-            try {
-                return asyncMethodService.wrapperMethod();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return 0L;
-        }, executorService);
-        CompletableFuture<Long> future2 = CompletableFuture.supplyAsync(() -> {
-            try {
-                return asyncMethodService.wrapperMethod();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return 0L;
-        }, executorService);
-        future1.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
-        future2.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
-        future.thenAccept(e -> log.info("总耗时：{} 毫秒", e));
-
-        log.info("主线程结束=====>"+ Thread.currentThread().getName());
-        return "test2Async-success";
-    }
 
 
     /*
