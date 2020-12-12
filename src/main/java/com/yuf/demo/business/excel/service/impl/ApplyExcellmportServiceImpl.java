@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 /**
  * @Author: dyf
@@ -61,10 +62,9 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             log.info("总校验时间为：【{}】毫秒", System.currentTimeMillis() - start);
             //字段基础校验，有一条不通过则重传
             if(excelResult.isVerfiyFail()){
-                ApplyExcelDTO a = excelResult.getFailList().get(0);
-                return new Response().fail("第"+a.getRowNum()+"行，"+a.getErrorMsg());
+                List<String> failStr = excelResult.getFailList().stream().map(a -> "第"+a.getRowNum()+"行，" + a.getName() + "-" + a.getErrorMsg()).collect(Collectors.toList());
+                return new Response().fail(failStr);
             }
-
             //将图片转为base64
             successList = excelResult.getList();
             Long printStart = System.currentTimeMillis();
@@ -77,16 +77,22 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         }
         //异步入库
         long dbStart = System.currentTimeMillis();
+        List<ApplyExcelImport> applyExcelImports = new ArrayList<>();
         successList.forEach(v -> {
             ApplyExcelImport applyExcelImport = new ApplyExcelImport();
             BeanUtils.copyProperties(v, applyExcelImport);
-            CompletableFuture.supplyAsync(() -> {
-                log.info("入库：{}----------", applyExcelImport.getIdCard());
-                return applyExcelImportDao.insert(applyExcelImport);
-            });
+            applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
+            applyExcelImport.setSource("2");
+            applyExcelImport.setPlaceCode("100000");
+            applyExcelImports.add(applyExcelImport);
+//            CompletableFuture.supplyAsync(() -> {
+//                log.info("入库：{}----------", applyExcelImport.getIdCard());
+//                return applyExcelImportDao.insert(applyExcelImport);
+//            });
 //            log.info("入库：{}----------", applyExcelImport.getIdCard());
 //            applyExcelImportDao.insert(applyExcelImport);
         });
+        CompletableFuture.supplyAsync(() -> applyExcelImportDao.insertBatch(applyExcelImports));//异步时，遇见唯一索引插入报错，因为没有用到返回值，所以不会返回报错
         log.info("入库总耗时【{}】毫秒", System.currentTimeMillis() - dbStart);
 
 

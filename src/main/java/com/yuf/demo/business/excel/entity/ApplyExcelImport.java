@@ -56,6 +56,8 @@ public class ApplyExcelImport extends Model<ApplyExcelImport> implements Seriali
     @ApiModelProperty(name = "用户类型（省厅用户类型）")
     private String type;
 
+    @ApiModelProperty(name = "数据来源 01：手机扫码填报，02：AI 能力层小区管理 后台填报")
+    private String source;
 
     @ApiModelProperty(name = "楼栋号")
     @TableField(exist = false)
