@@ -19,8 +19,8 @@ public class AsyncThreadPoolConfig {
     @Bean
     public Executor asyncPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
+        executor.setCorePoolSize(20);
+        executor.setMaxPoolSize(20);
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("asyncPool-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());//饱和策略

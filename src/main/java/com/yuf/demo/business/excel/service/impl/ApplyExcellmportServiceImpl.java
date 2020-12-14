@@ -104,7 +104,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         });
         log.info("入库总耗时【{}】毫秒", System.currentTimeMillis() - dbStart);
 
-        return new Response().success(successList.stream().map(v -> v.getName() + (v.getPhoto() != null ? "：头像图片存在":"：头像图片不存在")).collect(Collectors.toList()));
+        return new Response().success(successList.stream().map(v -> v.getName() + (v.getPhoto() != null ? "：头像存在":"：头像不存在")).collect(Collectors.toList()));
     }
 
     public static <T> List<List<T>> splitList(List<T> list, int splitSize) {
@@ -144,7 +144,6 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             conn.setConnectTimeout(5000);
             InputStream in = conn.getInputStream();
             if (applyExcel.getFaceUrl().equalsIgnoreCase(conn.getURL().toString())){
-                log.info("{}读取耗时：{}毫秒-由【{}】线程完成", applyExcel.getFaceUrl(), System.currentTimeMillis()-start, Thread.currentThread().getName());
                 ByteArrayOutputStream data = new ByteArrayOutputStream();
                 // 将内容读取内存中
                 int len;
@@ -153,6 +152,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
                     data.write(buffer, 0, len);
                 }
                 applyExcel.setPhoto(base64Encoder.encode(data.toByteArray()));
+                log.info("{}读取耗时：{}毫秒-由【{}】线程完成", applyExcel.getFaceUrl(), System.currentTimeMillis()-start, Thread.currentThread().getName());
             }
             in.close();
 
