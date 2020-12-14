@@ -23,6 +23,7 @@ public interface ApplyExcelImportDao extends BaseMapper<ApplyExcelImport> {
             + "VALUES <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">"
             + "(#{item.id},#{item.errorMsg},#{item.ywlsh},#{item.name},#{item.idCard},#{item.source},#{item.photo},#{item.type},#{item.address},#{item.phone},#{item.faceUrl},#{item.placeCode},#{item.importId})"
             + " </foreach>"
+            + "ON DUPLICATE KEY UPDATE id_card=values(id_card),place_code=values(place_code)"
             + "</script>")
     Integer insertBatch(@Param("list") List<ApplyExcelImport> list);
     //+ "on duplicate key update id_card=#{item.idCard} and place_code=#{item.placeCode}"

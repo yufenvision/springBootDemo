@@ -10,6 +10,7 @@ import com.yuf.demo.business.excel.mapper.ApplyExcelImportDao;
 import com.yuf.demo.business.excel.service.ApplyExcellmportService;
 import com.yuf.demo.utils.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -25,12 +26,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author: dyf
@@ -55,14 +58,13 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         ImportParams importParams = new ImportParams();
         importParams.setNeedVerfiy(true);//打开验证
 
-        ExcelImportResult<ApplyExcelDTO> excelResult;
         List<ApplyExcelDTO> successList = new ArrayList<>();
         try{
-            excelResult = ExcelImportUtil.importExcelMore(file.getInputStream(), ApplyExcelDTO.class, importParams);
+            ExcelImportResult<ApplyExcelDTO> excelResult = ExcelImportUtil.importExcelMore(file.getInputStream(), ApplyExcelDTO.class, importParams);
             log.info("总校验时间为：【{}】毫秒", System.currentTimeMillis() - start);
             //字段基础校验，有一条不通过则重传
             if(excelResult.isVerfiyFail()){
-                List<String> failStr = excelResult.getFailList().stream().map(a -> "第"+a.getRowNum()+"行，" + a.getName() + "-" + a.getErrorMsg()).collect(Collectors.toList());
+                List<String> failStr = excelResult.getFailList().stream().map(a -> "第"+ (a.getRowNum() + 1)+"行，" + a.getName() + "-" + a.getErrorMsg()).collect(Collectors.toList());
                 return new Response().fail(failStr);
             }
             //将图片转为base64
@@ -83,20 +85,41 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             BeanUtils.copyProperties(v, applyExcelImport);
             applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
             applyExcelImport.setSource("2");
-            applyExcelImport.setPlaceCode("100000");
+            if(StringUtils.isBlank(applyExcelImport.getPlaceCode()))applyExcelImport.setPlaceCode("100000");
             applyExcelImports.add(applyExcelImport);
-//            CompletableFuture.supplyAsync(() -> {
-//                log.info("入库：{}----------", applyExcelImport.getIdCard());
-//                return applyExcelImportDao.insert(applyExcelImport);
+//            CompletableFuture.runAsync(() -> {
+//                log.info("异步入库：{}----------", applyExcelImport.getIdCard());
+//                applyExcelImportDao.insert(applyExcelImport);
+//            }).exceptionally(e -> {
+//                e.printStackTrace();
+//                return null;
 //            });
-//            log.info("入库：{}----------", applyExcelImport.getIdCard());
-//            applyExcelImportDao.insert(applyExcelImport);
         });
-        CompletableFuture.supplyAsync(() -> applyExcelImportDao.insertBatch(applyExcelImports));//异步时，遇见唯一索引插入报错，因为没有用到返回值，所以不会返回报错
+        //mysql默认语句长度4M，分批插入
+        List<List<ApplyExcelImport>> listBatch = splitList(applyExcelImports, 30);
+        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.insertBatch(d)))
+        .exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
         log.info("入库总耗时【{}】毫秒", System.currentTimeMillis() - dbStart);
 
+        return new Response().success(successList.stream().map(v -> v.getName() + (v.getPhoto() != null ? "：头像图片存在":"：头像图片不存在")).collect(Collectors.toList()));
+    }
 
-        return new Response().success(successList.stream().map(v -> v.getPhoto() != null));
+    public static <T> List<List<T>> splitList(List<T> list, int splitSize) {
+        //判断集合是否为空
+        if (list.size() == 0)
+            return Collections.emptyList();
+        //计算分割后的大小
+        int maxSize = (list.size() + splitSize - 1) / splitSize;
+        //开始分割
+        return Stream.iterate(0, n -> n + 1)
+                .limit(maxSize)
+                .parallel()
+                .map(a -> list.parallelStream().skip(a * splitSize).limit(splitSize).collect(Collectors.toList()))
+                .filter(b -> !b.isEmpty())
+                .collect(Collectors.toList());
     }
 
 
