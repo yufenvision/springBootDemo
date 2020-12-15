@@ -1,5 +1,6 @@
-package com.yuf.demo.business.excel;
+package com.yuf.demo.business.excel.controller;
 
+import com.yuf.demo.business.excel.ExcelImportService;
 import com.yuf.demo.business.excel.service.ApplyExcellmportService;
 import com.yuf.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,10 @@ public class ExcelImportController {
         return applyExcellmportService.importExcelData(file);
     }
 
+    @PostMapping("/pushData")
+    public Response pushDataList(String url, String placeCode){
+        String sendUrl = url + "/" + placeCode;
+        return applyExcellmportService.pushDataAndSavePushResult(sendUrl, placeCode);
+    }
 
 }

@@ -3,19 +3,17 @@ package com.yuf.demo.business.excel.service.impl;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
-import com.alibaba.fastjson.JSON;
-import com.yuf.demo.business.excel.ApplyExcelDTO;
+import com.alibaba.fastjson.JSONObject;
+import com.yuf.demo.business.excel.dto.ApplyExcelDTO;
 import com.yuf.demo.business.excel.entity.ApplyExcelImport;
 import com.yuf.demo.business.excel.mapper.ApplyExcelImportDao;
 import com.yuf.demo.business.excel.service.ApplyExcellmportService;
+import com.yuf.demo.utils.HttpRequestUtil;
 import com.yuf.demo.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -70,9 +65,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             //将图片转为base64
             successList = excelResult.getList();
             Long printStart = System.currentTimeMillis();
-            CountDownLatch countDownLatch = new CountDownLatch(successList.size());
-            base64Transfer(successList, countDownLatch);//并行发送http请求
-            countDownLatch.await();
+            multiInvokeBase64Transfer(successList);//并行发送http请求
             log.info("图片转换总耗时【{}】毫秒", System.currentTimeMillis() - printStart);
         } catch (Exception e) {
             return new Response().fail(e.getMessage());
@@ -84,16 +77,10 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             ApplyExcelImport applyExcelImport = new ApplyExcelImport();
             BeanUtils.copyProperties(v, applyExcelImport);
             applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
-            applyExcelImport.setSource("2");
+            applyExcelImport.setSource("02");
+            applyExcelImport.setCreateTime(new Date());
             if(StringUtils.isBlank(applyExcelImport.getPlaceCode()))applyExcelImport.setPlaceCode("100000");
             applyExcelImports.add(applyExcelImport);
-//            CompletableFuture.runAsync(() -> {
-//                log.info("异步入库：{}----------", applyExcelImport.getIdCard());
-//                applyExcelImportDao.insert(applyExcelImport);
-//            }).exceptionally(e -> {
-//                e.printStackTrace();
-//                return null;
-//            });
         });
         //mysql默认语句长度4M，分批插入
         List<List<ApplyExcelImport>> listBatch = splitList(applyExcelImports, 30);
@@ -105,6 +92,34 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         log.info("入库总耗时【{}】毫秒", System.currentTimeMillis() - dbStart);
 
         return new Response().success(successList.stream().map(v -> v.getName() + (v.getPhoto() != null ? "：头像存在":"：头像不存在")).collect(Collectors.toList()));
+    }
+
+    @Override
+    @Transactional
+    public Response pushDataAndSavePushResult(String url, String placeCode) {
+        List<ApplyExcelImport> pushList = getPushList(placeCode);
+        try {
+            multiThreadInvoke(pushList, url);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //mysql默认语句长度4M，分批插入
+        List<List<ApplyExcelImport>> listBatch = splitList(pushList, 1000);
+        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.updateBatch(d)))
+        .exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
+
+        return new Response().success(pushList.stream().map(v -> v.getPushCode() + v.getPushMsg()).collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<ApplyExcelImport> getPushList(String placeCode) {
+        List<ApplyExcelImport> list = applyExcelImportDao.getPushList(placeCode);
+
+        return list;
     }
 
     public static <T> List<List<T>> splitList(List<T> list, int splitSize) {
@@ -122,15 +137,28 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
                 .collect(Collectors.toList());
     }
 
+    private void multiThreadInvoke(List<ApplyExcelImport> list, String url) throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(list.size());
+        list.forEach(v -> asyncPool.execute(()->{
+            List<ApplyExcelImport> sub = new ArrayList<>();
+            sub.add(v);
+            Response result = HttpRequestUtil.postBackResponse(url, JSONObject.toJSONString(sub));
+            v.setPushCode(String.valueOf(result.getCode()));//回调入库
+            v.setPushMsg((String) result.getData());
+            countDownLatch.countDown();
+        }));
+        countDownLatch.await();
+    }
 
-
-    private void base64Transfer(List<ApplyExcelDTO> applyExcelDTOS, CountDownLatch countDownLatch){
+    private void multiInvokeBase64Transfer(List<ApplyExcelDTO> applyExcelDTOS) throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(applyExcelDTOS.size());
         applyExcelDTOS.forEach(v -> {
             asyncPool.execute(() -> {
                 transfer2Base64(v);
                 countDownLatch.countDown();
             });
         });
+        countDownLatch.await();
     }
 
     private void transfer2Base64(ApplyExcelDTO applyExcel){
@@ -158,7 +186,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            applyExcel.setErrorMsg(Optional.ofNullable(applyExcel.getErrorMsg()).orElse(",") + "该人像图片地址无法访问");
+            applyExcel.setErrorMsg((StringUtils.isBlank(applyExcel.getErrorMsg()) ? "" : applyExcel.getErrorMsg() + ",") + "该人像图片地址无法访问");
         }
 
     }

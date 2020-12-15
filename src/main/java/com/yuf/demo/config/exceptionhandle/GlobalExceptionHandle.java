@@ -34,7 +34,7 @@ public class GlobalExceptionHandle {
 		Response result = new Response();
 		if(e instanceof GirlException){
 			GirlException girlException = (GirlException) e;
-			result.setStatus(girlException.getCode());
+			result.setCode(girlException.getCode());
 			result.setMsg(girlException.getMessage());
 			return result;
 		}else{

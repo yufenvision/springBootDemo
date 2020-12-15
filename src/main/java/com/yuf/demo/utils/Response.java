@@ -91,11 +91,11 @@ public class Response<T> {
 		this.msg = code.msg;
 	}
 
-	public int getStatus() {
+	public int getCode() {
 		return code;
 	}
 
-	public void setStatus(int code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 
@@ -114,5 +114,4 @@ public class Response<T> {
 	public void setData(T data) {
 		this.data = data;
 	}
-	
 }

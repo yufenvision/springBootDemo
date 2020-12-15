@@ -1,9 +1,11 @@
 package com.yuf.demo.business.excel.service.impl;
 
 import com.yuf.demo.DemoApplication;
+import com.yuf.demo.business.excel.mapper.ApplyExcelImportDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sun.misc.BASE64Encoder;
@@ -19,16 +21,18 @@ import java.nio.channels.Selector;
 import static org.junit.Assert.*;
 
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = DemoApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = DemoApplication.class)
 @Slf4j
 public class ApplyExcellmportServiceImplTest {
 
     static BASE64Encoder base64Encoder = new BASE64Encoder();
+    @Autowired
+    ApplyExcelImportDao applyExcelImportDao;
 
     @Test
-    public void channel() throws IOException {
-        Selector selector = Selector.open();
+    public void queryList(){
+        System.out.println(applyExcelImportDao.getPushList("100000").size());
 
     }
 
