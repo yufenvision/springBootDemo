@@ -97,8 +97,6 @@ public class HttpRequestUtil {
     }
 
     public static Response postBackResponse(String url, String jsonString) {
-        CloseableHttpResponse response = null;
-        BufferedReader in = null;
         String result = "";
         int code = -1;
         HttpPost httpPost = new HttpPost(url);
@@ -108,20 +106,11 @@ public class HttpRequestUtil {
         httpPost.addHeader("Content-type", "application/json; charset=utf-8");
         httpPost.setHeader("Accept", "application/json");
         httpPost.setEntity(new StringEntity(jsonString, Charset.forName("UTF-8")));
-        try {
-            response = httpClient.execute(httpPost);
+        try(CloseableHttpResponse response = httpClient.execute(httpPost)) {
             result = EntityUtils.toString(response.getEntity(), "UTF-8");
             code = response.getStatusLine().getStatusCode();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (null != response) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return new Response().makeResponse(code, "", result);
     }

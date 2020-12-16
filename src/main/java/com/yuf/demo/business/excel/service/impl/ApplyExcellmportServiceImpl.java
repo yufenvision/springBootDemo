@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuf.demo.business.excel.dto.ApplyExcelDTO;
 import com.yuf.demo.business.excel.entity.ApplyExcelImport;
+import com.yuf.demo.business.excel.filter.FieldFilter;
+import com.yuf.demo.business.excel.filter.FilterChain;
 import com.yuf.demo.business.excel.mapper.ApplyExcelImportDao;
 import com.yuf.demo.business.excel.service.ApplyExcellmportService;
 import com.yuf.demo.utils.HttpRequestUtil;
@@ -46,6 +48,8 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
     Executor asyncPool;
     @Autowired
     ApplyExcelImportDao applyExcelImportDao;
+    @Autowired
+    FilterChain filterChain;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -125,42 +129,36 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
 
     @Override
     public Response uploadJsonFile(MultipartFile file) {
-        BufferedReader br = null;
         StringBuffer sb = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             sb = new StringBuffer();
             String line = null;
             while((line = br.readLine()) != null){
                 sb.append(line);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         Response result = JSONObject.parseObject(sb.toString(), Response.class);
         JSONArray jsonArray = (JSONArray) JSONObject.parseObject(result.getData().toString(), Map.class).get("records");
         List<ApplyExcelImport> list = new ArrayList<>();
+        filterChain.add(new FieldFilter());
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jo = jsonArray.getJSONObject(i);
             ApplyExcelImport excelImport = new ApplyExcelImport();
-            excelImport.setYwlsh(jo.getString("ywlsh"));
-            excelImport.setName(jo.getString("name"));
-            excelImport.setIdCard(jo.getString("idCard"));
-            excelImport.setSource(jo.getString("source"));
-            excelImport.setPhoto(jo.getString("photo"));
-            excelImport.setPhone(jo.getString("phone"));
-            excelImport.setType(jo.getString("type"));
-            excelImport.setAddress(jo.getString("address"));
-            excelImport.setPlaceCode(jo.getString("xqid"));
-            excelImport.setImportId(jo.getString("personId"));
-            excelImport.setCreateTime(new Date());
+            filterChain.setIndex(0);
+            filterChain.doFilter(excelImport, jo);
+//            excelImport.setYwlsh(jo.getString("ywlsh"));
+//            excelImport.setName(jo.getString("name"));
+//            excelImport.setIdCard(jo.getString("idCard"));
+//            excelImport.setSource(jo.getString("source"));
+//            excelImport.setPhoto(jo.getString("photo"));
+//            excelImport.setPhone(jo.getString("phone"));
+//            excelImport.setType(jo.getString("type"));
+//            excelImport.setAddress(jo.getString("address"));
+//            excelImport.setPlaceCode(jo.getString("xqid"));
+//            excelImport.setImportId(jo.getString("personId"));
+//            excelImport.setCreateTime(new Date());
             list.add(excelImport);
         }
         List<List<ApplyExcelImport>> listBatch = splitList(list, 30);
