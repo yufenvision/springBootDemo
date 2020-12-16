@@ -20,4 +20,6 @@ public interface ApplyExcellmportService {
 
 
     List<ApplyExcelImport> getPushList(String placeCode);
+
+    Response uploadJsonFile(MultipartFile file);
 }

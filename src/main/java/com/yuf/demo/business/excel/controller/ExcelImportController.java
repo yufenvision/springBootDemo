@@ -43,4 +43,12 @@ public class ExcelImportController {
         return applyExcellmportService.pushDataAndSavePushResult(sendUrl, placeCode);
     }
 
+    @PostMapping("/uploadJsonFile")
+    public Response uploadJsonFile(@RequestParam("file") MultipartFile file){
+
+        return applyExcellmportService.uploadJsonFile(file);
+
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.yuf.demo.business.excel.service.impl;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuf.demo.business.excel.dto.ApplyExcelDTO;
 import com.yuf.demo.business.excel.entity.ApplyExcelImport;
@@ -19,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.Buffer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -120,6 +121,56 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         List<ApplyExcelImport> list = applyExcelImportDao.getPushList(placeCode);
 
         return list;
+    }
+
+    @Override
+    public Response uploadJsonFile(MultipartFile file) {
+        BufferedReader br = null;
+        StringBuffer sb = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            sb = new StringBuffer();
+            String line = null;
+            while((line = br.readLine()) != null){
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Response result = JSONObject.parseObject(sb.toString(), Response.class);
+        JSONArray jsonArray = (JSONArray) JSONObject.parseObject(result.getData().toString(), Map.class).get("records");
+        List<ApplyExcelImport> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jo = jsonArray.getJSONObject(i);
+            ApplyExcelImport excelImport = new ApplyExcelImport();
+            excelImport.setYwlsh(jo.getString("ywlsh"));
+            excelImport.setName(jo.getString("name"));
+            excelImport.setIdCard(jo.getString("idCard"));
+            excelImport.setSource(jo.getString("source"));
+            excelImport.setPhoto(jo.getString("photo"));
+            excelImport.setPhone(jo.getString("phone"));
+            excelImport.setType(jo.getString("type"));
+            excelImport.setAddress(jo.getString("address"));
+            excelImport.setPlaceCode(jo.getString("xqid"));
+            excelImport.setImportId(jo.getString("personId"));
+            excelImport.setCreateTime(new Date());
+            list.add(excelImport);
+        }
+        List<List<ApplyExcelImport>> listBatch = splitList(list, 30);
+        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.insertBatch(d)))
+        .exceptionally(e -> {
+            e.printStackTrace();
+            return null;
+        });
+
+        return new Response().success(list);
     }
 
     public static <T> List<List<T>> splitList(List<T> list, int splitSize) {
