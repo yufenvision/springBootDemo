@@ -148,17 +148,6 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             ApplyExcelImport excelImport = new ApplyExcelImport();
             filterChain.setIndex(0);
             filterChain.doFilter(excelImport, jo);
-//            excelImport.setYwlsh(jo.getString("ywlsh"));
-//            excelImport.setName(jo.getString("name"));
-//            excelImport.setIdCard(jo.getString("idCard"));
-//            excelImport.setSource(jo.getString("source"));
-//            excelImport.setPhoto(jo.getString("photo"));
-//            excelImport.setPhone(jo.getString("phone"));
-//            excelImport.setType(jo.getString("type"));
-//            excelImport.setAddress(jo.getString("address"));
-//            excelImport.setPlaceCode(jo.getString("xqid"));
-//            excelImport.setImportId(jo.getString("personId"));
-//            excelImport.setCreateTime(new Date());
             list.add(excelImport);
         }
         List<List<ApplyExcelImport>> listBatch = splitList(list, 30);
@@ -168,7 +157,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             return null;
         });
 
-        return new Response().success(list);
+        return new Response().success(list.stream().map(v -> v.getName().concat(":").concat(v.getIdCard())).collect(Collectors.toList()));
     }
 
     public static <T> List<List<T>> splitList(List<T> list, int splitSize) {

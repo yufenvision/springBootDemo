@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -28,27 +29,36 @@ public class ApplyExcelImport extends Model<ApplyExcelImport> implements Seriali
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
+    @NotBlank(message = "省厅流水号不能为空")
     @ApiModelProperty(name = "省厅流水号")
     private String ywlsh;
 
+    @NotBlank(message = "姓名不能为空")
     @ApiModelProperty(name = "姓名")
     private String name;
 
+    @Pattern(regexp = ".{15}|.{18}", message = "身份证号码必须为15位或18位")
+    @NotNull(message = "身份证号不能为空")
     @ApiModelProperty(name = "身份证号")
     private String idCard;
 
     @ApiModelProperty(name = "数据来源 01：手机扫码填报，02：AI 能力层小区管理 后台填报")
     private String source;
 
+    @NotBlank(message = "base64照片不能为空")
     @ApiModelProperty(name = "照片base64地址")
     private String photo;
 
+    @Pattern(regexp = "[0-9]{11}", message = "电话号码必须为11位(且均为数字)")
+    @NotNull(message = "电话号码不能为空")
     @ApiModelProperty(name = "电话号码")
     private String phone;
 
+    @NotBlank(message = "用户类型不能为空")
     @ApiModelProperty(name = "人员类型，01 住户，02 租户，03 物业人员，04 服务人员， 05 来访人员")
     private String type;
 
+    @NotBlank(message = "地址不能为空")
     @ApiModelProperty(name = "地址")
     private String address;
 
@@ -58,7 +68,7 @@ public class ApplyExcelImport extends Model<ApplyExcelImport> implements Seriali
     @ApiModelProperty(name = "人脸图片地址")
     private String faceUrl;
 
-    @ApiModelProperty(name = "导入失败消息提示")
+    @ApiModelProperty(name = "字段错误提示")
     private String errorMsg;
 
 //    @ApiModelProperty(name = "标准5端地址")

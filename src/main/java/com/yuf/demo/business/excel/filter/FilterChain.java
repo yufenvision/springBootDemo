@@ -20,6 +20,10 @@ public class FilterChain {
         return this;
     }
 
+    public void removeAllFilter(){
+        filterList.clear();
+    }
+
     public <T,S>void doFilter(T t, S s){
         if(index < filterList.size()){
             Filter filter = filterList.get(index);
