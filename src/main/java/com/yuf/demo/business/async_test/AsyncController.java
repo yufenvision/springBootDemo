@@ -1,5 +1,6 @@
 package com.yuf.demo.business.async_test;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +26,7 @@ import java.util.concurrent.Executors;
  * @Date: 2020/12/6 23:00
  * @Description:
  */
+@Api("异步测试")
 @Slf4j
 @RestController
 @RequestMapping("/async")

@@ -16,49 +16,55 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 * @version 创建时间：2019年1月26日 下午4:42:24
 * 类说明
 */
-//@Configuration
-//@EnableSwagger2
+@Configuration
+@EnableSwagger2
 public class SwaggerConfig {
-	
-	@Bean(value = "系统管理")
-    public Docket sys_api() {
+
+    private ApiInfo apiInfo = new ApiInfoBuilder()
+            .title("快速开发")//api标题
+            .description("yuf快速开发项目")//api描述
+            .version("1.0.0")//版本号
+            .build();
+
+
+//	@Bean(value = "系统管理")
+//    public Docket sys_api() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .apiInfo(apiInfo)
+//                .select()
+//                .apis(RequestHandlerSelectors.basePackage("com.yuf.demo.sys"))
+//                .paths(PathSelectors.any())
+//                .build()
+//                .groupName("系统管理模块")
+//                .pathMapping("/")
+////                .securitySchemes(securitySchemes())
+////                .securityContexts(securityContexts())
+//                .useDefaultResponseMessages(false)
+//                ;
+//    }
+//
+//	@Bean(value = "文件中心")
+//    public Docket filecenter_api() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .apiInfo(apiInfo)
+//                .select()
+//                .apis(RequestHandlerSelectors.basePackage("com.yuf.demo.business.filecenter"))
+//                .paths(PathSelectors.any())
+//                .build()
+//                .groupName("文件中心模块")
+//                ;
+//    }
+
+    @Bean(value = "数据导入")
+    public Docket dataInput_api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/sys/**"))
+                .apis(RequestHandlerSelectors.basePackage("com.yuf.demo.business.excel"))
+                .paths(PathSelectors.any())
                 .build()
-                .groupName("系统管理模块")
-                .pathMapping("/")
-//                .securitySchemes(securitySchemes())
-//                .securityContexts(securityContexts())
-                .useDefaultResponseMessages(false)
+                .groupName("数据导入模块")
                 ;
     }
 	
-	@Bean(value = "文件中心")
-    public Docket filecenter_api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.yuf.demo.business.filecenter"))
-                .paths(PathSelectors.regex("^(?!auth).*$"))
-                .build()
-                .groupName("文件中心模块")
-                .pathMapping("/")
-//                .securitySchemes(securitySchemes())
-//                .securityContexts(securityContexts())
-                .useDefaultResponseMessages(false)
-                ;
-    }
-	
-	
-	private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("demo项目")
-                .description("接口文档")
-//                .termsOfServiceUrl("http://blog.didispace.com/")
-                .version("1.0")
-                .build();
-    }
 }

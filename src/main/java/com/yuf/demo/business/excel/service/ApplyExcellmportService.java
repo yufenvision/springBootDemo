@@ -15,11 +15,11 @@ public interface ApplyExcellmportService {
 
     Response importExcelData(MultipartFile file);
 
-
     Response pushDataAndSavePushResult(String url, String placeCode);
-
 
     List<ApplyExcelImport> getPushList(String placeCode);
 
     Response uploadJsonFile(MultipartFile file);
+
+
 }
