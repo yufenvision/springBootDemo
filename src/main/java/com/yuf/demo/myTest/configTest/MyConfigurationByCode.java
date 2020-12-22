@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @version 2018年10月25日上午10:50:29
  */
 
-@Configuration
+//@Configuration
 public class MyConfigurationByCode {
 	
 	public MyConfigurationByCode() {
@@ -20,5 +20,12 @@ public class MyConfigurationByCode {
 	public MyBean myBean(){
 		MyBean mybean = new MyBean();
 		return mybean;
+	}
+
+
+	@Bean
+	public MyBean1 xx(){
+		MyBean1 mybean1 = new MyBean1();
+		return mybean1;
 	}
 }

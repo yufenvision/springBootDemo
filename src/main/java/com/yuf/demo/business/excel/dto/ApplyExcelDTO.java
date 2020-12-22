@@ -5,6 +5,8 @@ import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -19,11 +21,11 @@ public class ApplyExcelDTO implements Serializable, IExcelModel, IExcelDataModel
 
     private Long id;
 
-    @NotNull(message = "导入id不能为空")
+    @NotBlank(message = "导入id不能为空")
     @Excel(name = "id")
     private String importId;
 
-    @NotNull(message = "姓名不能为空")
+    @NotBlank(message = "姓名不能为空")
     @Excel(name = "姓名")
     private String name;
 
@@ -32,7 +34,7 @@ public class ApplyExcelDTO implements Serializable, IExcelModel, IExcelDataModel
     @Excel(name = "电话号码")
     private String phone;
 
-    @NotNull(message = "人脸图片地址不能为空")
+    @NotBlank(message = "人脸图片地址不能为空")
     @Excel(name = "人脸图片地址")
     private String faceUrl;
 
@@ -49,11 +51,12 @@ public class ApplyExcelDTO implements Serializable, IExcelModel, IExcelDataModel
 //    @Excel(name = "标准5端地址")
 //    private String fiveAdress;
 
-    @NotNull(message = "地址不能为空")
+    //楼栋单元楼层房间号全地址
+    @NotBlank(message = "地址不能为空")
     @Excel(name = "地址")
     private String address;
 
-    @NotNull(message = "用户类型不能为空")
+    @NotBlank(message = "用户类型不能为空")
     @Excel(name = "用户类型（省厅用户类型）")
     private String type;
 
@@ -76,6 +79,8 @@ public class ApplyExcelDTO implements Serializable, IExcelModel, IExcelDataModel
 
     private String photo;
 
+    @Excel(name = "省级小区编码")
+    @NotBlank(message = "省级小区编码不能为空")
     private String placeCode;
 
     @Override

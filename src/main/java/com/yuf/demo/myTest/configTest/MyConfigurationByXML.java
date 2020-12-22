@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 public class MyConfigurationByXML {
 
 	public MyConfigurationByXML() {
-		System.out.println("我的XML配置初始化。。。。");
+		System.out.println("我的XML配置,利用注解类获取xml文件的配置，来初始化。。。。");
 	}
 	
 }

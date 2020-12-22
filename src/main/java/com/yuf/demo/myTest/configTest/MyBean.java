@@ -7,14 +7,12 @@ package com.yuf.demo.myTest.configTest;
  */
 public class MyBean {
 	
-	private String value = "我是一个bean";
-	
+	private String value = "我是一个MyBean";
+
 	public MyBean() {
-		super();
 	}
 
 	public MyBean(String value) {
-		super();
 		this.value = value;
 	}
 

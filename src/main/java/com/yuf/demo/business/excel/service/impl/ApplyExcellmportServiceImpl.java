@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.Buffer;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -81,7 +82,8 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         successList.forEach(v -> {
             ApplyExcelImport applyExcelImport = new ApplyExcelImport();
             BeanUtils.copyProperties(v, applyExcelImport);
-            applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
+//            applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
+            applyExcelImport.setAddress(v.getAddress());
             applyExcelImport.setSource("02");
             applyExcelImport.setCreateTime(new Date());
             if(StringUtils.isBlank(applyExcelImport.getPlaceCode()))applyExcelImport.setPlaceCode("100000");
@@ -182,7 +184,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             sub.add(v);
             Response result = HttpRequestUtil.postBackResponse(url, JSONObject.toJSONString(sub));
             v.setPushCode(String.valueOf(result.getCode()));//回调入库
-            v.setPushMsg((String) result.getData());
+            v.setPushMsg(LocalDateTime.now() + Optional.ofNullable(v.getPushMsg()).orElse("") + result.getData());
             countDownLatch.countDown();
         }));
         countDownLatch.await();

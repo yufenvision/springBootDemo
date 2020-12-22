@@ -7,16 +7,33 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class UseBeanTest {
 	
 	public static void main(String[] args) {
-//		ApplicationContext context = new AnnotationConfigApplicationContext(MyConfigurationByCode.class);
+		//通过注解获取
+		//getByAnnotationConfig();
+
+		//通过xml获取
+		getByXmlConfig();
+
+	}
+
+	public static void getByXmlConfig(){
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring-myCofig.xml");
 //		ApplicationContext context = new AnnotationConfigApplicationContext(MyConfigurationByXML.class);
-//		MyBean myBean = (MyBean) context.getBean("myBean");//默认取bean方法名称
-//		System.out.println(myBean.getValue());
-		
-//		ApplicationContext context1 = new ClassPathXmlApplicationContext("com/yuf/demo/myTest/configTest/spring-myCofig.xml");
-		ApplicationContext context1 = new ClassPathXmlApplicationContext("classpath:spring-myCofig.xml");
-		MyBean myBean = (MyBean) context1.getBean("myBean");//默认取bean方法名称
-		MyBean1 myBean1 = (MyBean1) context1.getBean("myBean1");//默认取bean方法名称
+		MyBean myBean = context.getBean(MyBean.class);//通过bean方法名称,也就是bean对象的名称获取该对象
+		MyBean1 myBean1 = (MyBean1) context.getBean("xx");//默认取bean方法名称
 		System.out.println(myBean.getValue());
 		System.out.println(myBean1.getValue());
 	}
+
+
+	public static void getByAnnotationConfig(){
+		ApplicationContext context = new AnnotationConfigApplicationContext(MyConfigurationByCode.class);
+
+		MyBean myBean = (MyBean) context.getBean("myBean");//通过bean方法名称,也就是bean对象的名称获取该对象
+		MyBean1 myBean1 = context.getBean(MyBean1.class);
+		System.out.println(myBean.getValue());
+		System.out.println(myBean1.getValue());
+	}
+
+
+
 }
