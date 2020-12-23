@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.Buffer;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -60,14 +61,16 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         importParams.setNeedVerfiy(true);//打开验证
 
         List<ApplyExcelDTO> successList = new ArrayList<>();
+        List<ApplyExcelDTO> failList = new ArrayList<>();
         try{
             ExcelImportResult<ApplyExcelDTO> excelResult = ExcelImportUtil.importExcelMore(file.getInputStream(), ApplyExcelDTO.class, importParams);
             log.info("总校验时间为：【{}】毫秒", System.currentTimeMillis() - start);
             //字段基础校验，有一条不通过则重传
-            if(excelResult.isVerfiyFail()){
-                List<String> failStr = excelResult.getFailList().stream().map(a -> "第"+ (a.getRowNum() + 1)+"行，" + a.getName() + "-" + a.getErrorMsg()).collect(Collectors.toList());
-                return new Response().fail(failStr);
-            }
+//            if(excelResult.isVerfiyFail()){
+//                List<String> failStr = excelResult.getFailList().stream().map(a -> "第"+ (a.getRowNum() + 1)+"行，" + a.getName() + "-" + a.getErrorMsg()).collect(Collectors.toList());
+//                return new Response().fail(failStr);
+//            }
+            failList = excelResult.getFailList();
             //将图片转为base64
             successList = excelResult.getList();
             Long printStart = System.currentTimeMillis();
@@ -79,6 +82,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         //异步入库
         long dbStart = System.currentTimeMillis();
         List<ApplyExcelImport> applyExcelImports = new ArrayList<>();
+        successList.addAll(failList);
         successList.forEach(v -> {
             ApplyExcelImport applyExcelImport = new ApplyExcelImport();
             BeanUtils.copyProperties(v, applyExcelImport);
@@ -184,7 +188,8 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             sub.add(v);
             Response result = HttpRequestUtil.postBackResponse(url, JSONObject.toJSONString(sub));
             v.setPushCode(String.valueOf(result.getCode()));//回调入库
-            v.setPushMsg(LocalDateTime.now() + Optional.ofNullable(v.getPushMsg()).orElse("") + result.getData());
+            String pushMsg = Optional.ofNullable(v.getPushMsg()).orElse("") + "," + (DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()) + result.getData());
+            v.setPushMsg(pushMsg);
             countDownLatch.countDown();
         }));
         countDownLatch.await();

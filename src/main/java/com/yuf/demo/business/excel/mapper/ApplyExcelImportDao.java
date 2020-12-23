@@ -31,7 +31,7 @@ public interface ApplyExcelImportDao extends BaseMapper<ApplyExcelImport> {
     @Insert("<script>"  +
             "INSERT INTO sichuan_center_person_info_excel_import(id,error_msg,ywlsh,name,id_card,source,type,address,phone,face_url,place_code,import_id,push_code,push_msg) "
             + "VALUES <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">"
-            + "(#{item.id},#{item.errorMsg},#{item.ywlsh},#{item.name},#{item.idCard},#{item.source},#{item.type},#{item.address},#{item.phone},#{item.faceUrl},#{item.placeCode},#{item.importId},#{item.pushCode},#{item.pushMsg}"
+            + "(#{item.id},#{item.errorMsg},#{item.ywlsh},#{item.name},#{item.idCard},#{item.source},#{item.type},#{item.address},#{item.phone},#{item.faceUrl},#{item.placeCode},#{item.importId},#{item.pushCode},#{item.pushMsg})"
             + " </foreach>"
             + "ON DUPLICATE KEY UPDATE id_card=values(id_card),place_code=values(place_code),push_code=values(push_code),push_msg=values(push_msg)"
             + "</script>")
