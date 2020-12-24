@@ -32,6 +32,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,7 +89,11 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             ApplyExcelImport applyExcelImport = new ApplyExcelImport();
             BeanUtils.copyProperties(v, applyExcelImport);
 //            applyExcelImport.setAddress(v.getAddress() + String.format("%s栋%s单元%s层%s号",v.getBuildNum(), v.getUnitNum(),v.getFloorNum(), v.getRoomNum()));
-            applyExcelImport.setAddress(v.getAddress());
+            if("1".equals(applyExcelImport.getType()) || "2".equals(applyExcelImport.getType())){
+                if(!applyExcelImport.getAddress().matches("^.*\\d+栋\\d+单元\\d+层\\d+号")){
+                    applyExcelImport.setErrorMsg("业主和租户的地址应包含楼栋单元楼层房间号，" + applyExcelImport.getErrorMsg());
+                }
+            }
             applyExcelImport.setSource("02");
             applyExcelImport.setCreateTime(new Date());
             if(StringUtils.isBlank(applyExcelImport.getPlaceCode()))applyExcelImport.setPlaceCode("100000");
@@ -95,14 +101,19 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         });
         //mysql默认语句长度4M，分批插入
         List<List<ApplyExcelImport>> listBatch = splitList(applyExcelImports, 30);
-        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.insertBatch(d)))
-        .exceptionally(e -> {
-            e.printStackTrace();
-            return null;
-        });
+        ayncInvoke(listBatch, (d)-> applyExcelImportDao.insertBatch(d));
         log.info("入库总耗时【{}】毫秒", System.currentTimeMillis() - dbStart);
 
         return new Response().success(successList.stream().map(v -> v.getName() + (v.getPhoto() != null ? "：头像存在":"：头像不存在")).collect(Collectors.toList()));
+    }
+
+    //异步调用入库
+    public <T> CompletableFuture<Void> ayncInvoke(List<T> listBatch, Consumer<T> consumer){
+        return CompletableFuture.runAsync(() -> listBatch.forEach(consumer))
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
     }
 
     @Override
@@ -114,15 +125,9 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         //mysql默认语句长度4M，分批插入
         List<List<ApplyExcelImport>> listBatch = splitList(pushList, 1000);
-        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.updateBatch(d)))
-        .exceptionally(e -> {
-            e.printStackTrace();
-            return null;
-        });
-
+        ayncInvoke(listBatch, (d) -> applyExcelImportDao.updateBatch(d));
         return new Response().success(pushList.stream().map(v -> v.getPushCode() + v.getPushMsg()).collect(Collectors.toList()));
     }
 
@@ -157,11 +162,7 @@ public class ApplyExcellmportServiceImpl implements ApplyExcellmportService {
             list.add(excelImport);
         }
         List<List<ApplyExcelImport>> listBatch = splitList(list, 30);
-        CompletableFuture.runAsync(() -> listBatch.forEach(d -> applyExcelImportDao.insertBatch(d)))
-        .exceptionally(e -> {
-            e.printStackTrace();
-            return null;
-        });
+        ayncInvoke(listBatch, (d)-> applyExcelImportDao.insertBatch(d));
 
         return new Response().success(list.stream().map(v -> v.getName().concat(":").concat(v.getIdCard())).collect(Collectors.toList()));
     }
