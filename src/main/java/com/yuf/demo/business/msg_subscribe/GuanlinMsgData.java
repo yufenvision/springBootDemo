@@ -80,4 +80,7 @@ public class GuanlinMsgData {
     @ApiModelProperty(name = "卡号, 类型为 1 卡时返回", required = false)
     String card_no;
 
+    @ApiModelProperty(name = "用户电话号码", required = false)
+    String user_phone;
+
 }

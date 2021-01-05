@@ -21,6 +21,13 @@ public class MsgController {
 
     @PostMapping("/msg")
     public void receiveMsg(@RequestBody GuanlinDoorInOutMsgDTO msgDTO){
+
+        log.info(JSONObject.toJSONString(msgDTO));
+    }
+
+    @PostMapping("/msgMap")
+    public void receiveMsg(@RequestBody Map msgDTO){
+
         log.info(JSONObject.toJSONString(msgDTO));
     }
 
