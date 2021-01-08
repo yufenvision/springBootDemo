@@ -2,8 +2,10 @@ package com.yuf.demo.business.async_test;
 
 import com.alibaba.fastjson.JSON;
 import com.yuf.demo.utils.Response;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,12 +13,15 @@ import org.springframework.web.bind.annotation.*;
  * @Date: 2020/12/5 18:04
  * @Description:
  */
+@Api(tags = "异步测试")
 @RestController
 @RequestMapping("/test" )
 public class TestController {
 
+//    @Autowired
+//    RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    StringRedisTemplate redisTemplate;
 
     @PostMapping("/set")
     public Response addPersonInfo(@RequestBody PersonInfo personInfo){

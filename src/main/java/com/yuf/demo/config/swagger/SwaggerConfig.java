@@ -66,5 +66,16 @@ public class SwaggerConfig {
                 .groupName("数据导入模块")
                 ;
     }
-	
+
+    @Bean(value = "测试")
+    public Docket test_api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.yuf.demo.business.async_test"))
+                .paths(PathSelectors.any())
+                .build()
+                .groupName("异步测试模块")
+                ;
+    }
 }

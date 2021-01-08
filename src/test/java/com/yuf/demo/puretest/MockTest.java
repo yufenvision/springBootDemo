@@ -1,5 +1,6 @@
 package com.yuf.demo.puretest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yuf.demo.business.async_test.PersonInfo;
 import com.yuf.demo.business.async_test.TestController;
 import com.yuf.demo.utils.Response;
@@ -42,6 +43,7 @@ public class MockTest {
 		TestController testController = mock(TestController.class);
 
 		when(personInfo.getName()).thenReturn("名字");
+		when(personInfo.getId()).thenReturn("123");
 		when(personInfo.getAddress()).thenReturn("地址");
 		when(personInfo.getAge()).thenCallRealMethod();
 
@@ -51,6 +53,6 @@ public class MockTest {
 		Assert.assertEquals(p.getAge(), null);
 		Assert.assertEquals(p.getName(), "名字");
 		Assert.assertEquals(p.getAddress(), "地址");
-
+		System.out.println(JSONObject.toJSONString(personInfo));
 	}
 }
