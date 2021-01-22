@@ -24,7 +24,7 @@ public interface ApplyExcelImportDao extends BaseMapper<ApplyExcelImport> {
             + "VALUES <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">"
             + "(#{item.id},#{item.errorMsg},#{item.ywlsh},#{item.name},#{item.idCard},#{item.source},#{item.photo},#{item.type},#{item.address},#{item.phone},#{item.faceUrl},#{item.placeCode},#{item.importId},#{item.pushCode},#{item.pushMsg},#{item.createTime})"
             + " </foreach>"
-            + "ON DUPLICATE KEY UPDATE id_card=values(id_card),place_code=values(place_code),address=values(address),photo=values(photo),push_code=values(push_code),error_msg=values(error_msg)"
+            + "ON DUPLICATE KEY UPDATE ywlsh=values(ywlsh),id_card=values(id_card),place_code=values(place_code),address=values(address),photo=values(photo),push_code=values(push_code),error_msg=values(error_msg)"
             + "</script>")
     Integer insertBatch(@Param("list") List<ApplyExcelImport> list);
 
@@ -33,7 +33,7 @@ public interface ApplyExcelImportDao extends BaseMapper<ApplyExcelImport> {
             + "VALUES <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">"
             + "(#{item.id},#{item.errorMsg},#{item.ywlsh},#{item.name},#{item.idCard},#{item.source},#{item.type},#{item.address},#{item.phone},#{item.faceUrl},#{item.placeCode},#{item.importId},#{item.pushCode},#{item.pushMsg})"
             + " </foreach>"
-            + "ON DUPLICATE KEY UPDATE id_card=values(id_card),place_code=values(place_code),push_code=values(push_code),push_msg=values(push_msg)"
+            + "ON DUPLICATE KEY UPDATE ywlsh=values(ywlsh),id_card=values(id_card),place_code=values(place_code),push_code=values(push_code),push_msg=values(push_msg)"
             + "</script>")
     Integer updateBatch(@Param("list") List<ApplyExcelImport> list);
 

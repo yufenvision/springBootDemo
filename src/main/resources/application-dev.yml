@@ -27,7 +27,10 @@ spring:
     suffix: .html
   #spring.thymeleaf.template-resolver-order= # Order of the template resolver in the chain.
   #spring.thymeleaf.view-names= # Comma-separated list of view names that can beverage resolved.
-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   #数据库设置
   datasource:
     driverClassName: com.mysql.jdbc.Driver
