@@ -29,7 +29,8 @@ public class ApplyExcelImport extends Model<ApplyExcelImport> implements Seriali
     @TableId(value = "ID", type = IdType.AUTO)
     private Long id;
 
-    @NotBlank(message = "省厅流水号不能为空")
+    @Pattern(regexp = "[a-z0-9A-Z]{32}", message = "省厅流水号必须为32位,且均为字母数字")
+    @NotNull(message = "省厅流水号不能为空")
     @ApiModelProperty(name = "省厅流水号")
     private String ywlsh;
 
