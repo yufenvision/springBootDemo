@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "异步测试")
 @RestController
 @RequestMapping("/test" )
-public class TestController {
+public class TestController implements AbstractController{
 
 //    @Autowired
 //    RedisTemplate<String, Object> redisTemplate;
@@ -35,4 +35,8 @@ public class TestController {
         return new Response<>().success(personInfo);
     }
 
+    @Override
+    public String testS() {
+        return "testS";
+    }
 }
