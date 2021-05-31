@@ -1,4 +1,4 @@
-package myBatisGenerator;
+package mybatisgenerator;
 
 import java.io.File;
 import java.util.ArrayList;
