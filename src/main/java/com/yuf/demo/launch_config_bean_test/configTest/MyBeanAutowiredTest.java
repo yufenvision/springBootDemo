@@ -1,4 +1,4 @@
-package com.yuf.demo.myTest.configTest;
+package com.yuf.demo.launch_config_bean_test.configTest;
 
 import com.yuf.demo.config.aop.LogInfo;
 import org.springframework.beans.factory.annotation.Autowired;

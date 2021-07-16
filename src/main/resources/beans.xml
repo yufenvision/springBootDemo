@@ -7,16 +7,16 @@
             http://www.springframework.org/schema/beans 
             http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="beanPostProcessor" class="com.yuf.demo.myTest.bean_life.MyBeanPostProcessor">
+    <bean id="beanPostProcessor" class="com.yuf.demo.launch_config_bean_test.bean_life.MyBeanPostProcessor">
     </bean>
 
-    <bean id="instantiationAwareBeanPostProcessor" class="com.yuf.demo.myTest.bean_life.MyInstantiationAwareBeanPostProcessor">
+    <bean id="instantiationAwareBeanPostProcessor" class="com.yuf.demo.launch_config_bean_test.bean_life.MyInstantiationAwareBeanPostProcessor">
     </bean>
 
-    <bean id="beanFactoryPostProcessor" class="com.yuf.demo.myTest.bean_life.MyBeanFactoryPostProcessor">
+    <bean id="beanFactoryPostProcessor" class="com.yuf.demo.launch_config_bean_test.bean_life.MyBeanFactoryPostProcessor">
     </bean>
 
-    <bean id="person" class="com.yuf.demo.myTest.bean_life.Person" init-method="myInit"
+    <bean id="person" class="com.yuf.demo.launch_config_bean_test.bean_life.Person" init-method="myInit"
           destroy-method="myDestory" scope="singleton" p:name="张三" p:address="广州" p:phone="15900000000" />
 
 </beans>

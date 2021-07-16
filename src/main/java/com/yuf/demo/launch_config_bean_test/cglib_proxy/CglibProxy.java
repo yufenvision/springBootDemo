@@ -1,4 +1,4 @@
-package com.yuf.demo.myTest.cglib_proxy;
+package com.yuf.demo.launch_config_bean_test.cglib_proxy;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

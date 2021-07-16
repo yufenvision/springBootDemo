@@ -10,8 +10,8 @@
         http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
         
-	<bean id="myBean" class="com.yuf.demo.myTest.configTest.MyBean"></bean>
-	<bean id="xx" class="com.yuf.demo.myTest.configTest.MyBean1"></bean>
+	<bean id="myBean" class="com.yuf.demo.launch_config_bean_test.configTest.MyBean"></bean>
+	<bean id="xx" class="com.yuf.demo.launch_config_bean_test.configTest.MyBean1"></bean>
 
 
 </beans>

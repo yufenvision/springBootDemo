@@ -1,4 +1,4 @@
-package com.yuf.demo.myTest.bean_post_processor;
+package com.yuf.demo.launch_config_bean_test.bean_post_processor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

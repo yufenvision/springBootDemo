@@ -1,4 +1,4 @@
-package com.yuf.demo.myTest.cglib_proxy;
+package com.yuf.demo.launch_config_bean_test.cglib_proxy;
 
 
 //真实主题角色

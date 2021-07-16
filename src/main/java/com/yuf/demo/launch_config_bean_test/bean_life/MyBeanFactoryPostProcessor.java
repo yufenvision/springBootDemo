@@ -1,4 +1,4 @@
-package com.yuf.demo.myTest.bean_life;
+package com.yuf.demo.launch_config_bean_test.bean_life;
 
 /**
  * @Author: dyf
