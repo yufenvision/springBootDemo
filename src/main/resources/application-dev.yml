@@ -90,6 +90,9 @@ storage:
   path: D:/demo/media/
 
 
-
+#外网访问
+outside:
+  net:
+    host: 47.108.150.200:9090
 
 
