@@ -3,7 +3,7 @@
   <groupId>com.demo.springboot</groupId>
   <artifactId>spring-boot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
+
   	<!-- 这块统一用spring-boot-starter-parent做为parent 所以spring-boot-starter-web不用填写版本号 -->
   	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -11,17 +11,17 @@
 		<version>2.1.9.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<dependencies>
 		<!--spring boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId><!-- 核心模块，包括自动配置支持、日志和YAML -->
 		</dependency>
-		<dependency> 
-			<groupId>org.springframework.boot</groupId> 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId><!-- 测试模块，包括JUnit、Hamcrest、Mockito -->
-			<scope>test</scope> 
+			<scope>test</scope>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
@@ -39,24 +39,18 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- mybatis plus -->
-		<dependency>
-		    <groupId>com.baomidou</groupId>
-		    <artifactId>mybatisplus-spring-boot-starter</artifactId>
-		    <version>1.0.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus</artifactId>
-			<version>2.3</version>
-		</dependency>
-		
+<!--		<dependency>-->
+<!--			<groupId>org.mybatis.spring.boot</groupId>-->
+<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--			<version>2.2.0</version>-->
+<!--		</dependency>-->
+
 		<!-- 使用thymeleaf模板-->
 		<dependency>
 		     <groupId>org.springframework.boot</groupId>
 		     <artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		
+
 		<!-- velocity模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -160,6 +154,32 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.4.1</version>
+				<configuration>
+					<verbose>true</verbose>
+					<overwrite>true</overwrite>
+					<configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>Generate MyBatis Artifacts</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>8.0.17</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 		</plugins>
 	</build>
 
