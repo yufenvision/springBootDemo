@@ -39,11 +39,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.mybatis.spring.boot</groupId>-->
-<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--			<version>2.2.0</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 
 		<!-- 使用thymeleaf模板-->
 		<dependency>

@@ -9,9 +9,17 @@
 
     <context id="simple"  targetRuntime="MyBatis3">
 
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
         <!-- 数据库连接信息 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         connectionURL="jdbc:mysql://10.62.108.86:3306/commercial?useUnicode=true&amp;useSSL=false&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC" userId="devmysql" password="1qaz@WSX">
+            <!-- 不管多个mysql节点，只生成一份数据 -->
+            <property name="nullCatalogMeansCurrent" value="true"/>
         </jdbcConnection>
 
         <!-- java类型处理器 用于处理数据库中的类型到Java中的类型，
@@ -28,14 +36,8 @@
 
         <javaModelGenerator targetPackage="com.yuf.demo.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
-            <!-- for MyBatis3 / MyBatis3Simple
-            是否创建一个不可变的类，如果为true，
-            那么MBG会创建一个没有setter方法的类，
-            取而代之的是类似constructorBased的类 -->
-            <property name="enableSubPackages" value="true" />
-            <!-- 设置是否在getter方法中，
-            对String类型字段调用trim()方法 -->
-            <property name="trimStrings" value="true" />
+<!--            &lt;!&ndash; 设置是否在getter方法中，对String类型字段调用trim()方法 &ndash;&gt;-->
+<!--            <property name="trimStrings" value="true" />-->
         </javaModelGenerator>
 
         <!--
@@ -44,9 +46,6 @@
             targetProject:哪个包下
         -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
-            <!-- 在targetPackage的基础上，
-            根据数据库的schema再生成一层package，
-            最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
@@ -58,7 +57,7 @@
         </javaClientGenerator>
 
         <!--建立与数据库中哪张表的关系映射-->
-        <table tableName="area" domainObjectName="Area"
+        <table schema="mybatis" tableName="area" domainObjectName="Area"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
 
