@@ -14,7 +14,7 @@ public class MybatisGenerator {
      *  读取MBG生成代码
      */
     public static void main(String[] args) throws Exception {
-
+        //利用插件mybatis-generator生成
     }
 
 }
