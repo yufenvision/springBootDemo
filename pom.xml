@@ -151,7 +151,19 @@
 			<scope>provided</scope>
 			<version>2.1.0.RELEASE</version>
 		</dependency>
-<!--		<dependency>-->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>2.2.0.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.55</version>
+			<scope>test</scope>
+		</dependency>
+		<!--		<dependency>-->
 <!--			<groupId>org.springframework.cloud</groupId>-->
 <!--			<artifactId>spring-cloud-context</artifactId>-->
 <!--			<version>2.1.0.RELEASE</version>-->
